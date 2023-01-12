@@ -78,7 +78,7 @@ public class ServerTest implements SpigotTest {
 
 
     @Test(ignore = true)
-    public void someThinkElse() {
+    public void someLegacyStuff() {
 
     }
 }
