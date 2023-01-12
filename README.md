@@ -1,5 +1,6 @@
 # SpigotTester
 Library for Integration testing plugins with Spigot/Bukkit API
+* Tests must be located in the Plugin package 
 
 Example Initialization 
 
