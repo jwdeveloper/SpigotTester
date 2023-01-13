@@ -12,7 +12,7 @@
                 <repository>
                     <id>github</id>
                     <name>Spigot Tester</name>
-                    <url>https://maven.pkg.github.com/jwdeveloper/spigottester</url>
+                    <url>https://maven.pkg.github.com/jwdeveloper/SpigotTester</url>
                 </repository>
             </repositories>
         </profile>
