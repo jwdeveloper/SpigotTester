@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 
-package jw.spigot;
+package io.spigot;
 
-import jw.spigot.tester.SpigotTester;
+import io.spigot.tester.SpigotTester;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 

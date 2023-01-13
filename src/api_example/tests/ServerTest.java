@@ -22,12 +22,12 @@
  * SOFTWARE.
  */
 
-package jw.spigot.tests;
+package io.spigot.tests;
 
-import jw.spigot.MyPlugin;
-import jw.spigot.tester.api.SpigotTest;
-import jw.spigot.tester.api.annotations.Test;
-import jw.spigot.tester.api.assertions.SpigotAssertion;
+import io.spigot.MyPlugin;
+import io.github.jwdeveloper.spigot.tester.api.SpigotTest;
+import io.github.jwdeveloper.spigot.tester.api.annotations.Test;
+import io.github.jwdeveloper.spigot.tester.api.assertions.SpigotAssertion;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;

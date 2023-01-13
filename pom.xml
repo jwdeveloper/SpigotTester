@@ -25,7 +25,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>jw.spigot.tester</groupId>
+    <groupId>io.github.jwdeveloper.spigot.tester</groupId>
     <artifactId>SpigotTester</artifactId>
     <version>${version}</version>
     <properties>
@@ -44,21 +44,17 @@
             </plugin>
         </plugins>
     </build>
-
     <repositories>
         <repository>
             <id>spigotmc-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-        </repository>
-        <repository>
-            <id>sonatype</id>
-            <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
     </repositories>
 
     <distributionManagement>
         <repository>
             <id>github</id>
+            <name>Spigot Tester</name>
             <url>https://maven.pkg.github.com/jwdeveloper/SpigotTester</url>
         </repository>
     </distributionManagement>
