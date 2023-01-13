@@ -33,6 +33,7 @@ public class MyPlugin extends JavaPlugin {
     public void onEnable() {
         SpigotTester.create(this)
                 //
+                //
                 //will parameter will be passed to test constructor
                 .withParameter(this, JavaPlugin.class)
                 .configure(options ->
