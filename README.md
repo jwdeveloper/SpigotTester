@@ -22,12 +22,13 @@ public class MyPlugin extends JavaPlugin {
                     //output report file path
                     options.setReportPath("...");
                 })
-                .onSuccess(report ->
+                .onTest(result ->
                 {
-                    Bukkit.getLogger().info("Tests passed");
+                    Bukkit.getLogger().info("Tests info: "+result.toString());
                 })
-                .onFail(report -> {
-                    Bukkit.getLogger().info("Tests not passed");
+                .onFinish(report ->
+                {
+                    Bukkit.getLogger().info("Tests finished report: "+report.toString());
                 })
                 .onException(e ->
                 {
