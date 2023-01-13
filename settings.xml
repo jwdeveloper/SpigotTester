@@ -11,8 +11,8 @@
             <repositories>
                 <repository>
                     <id>github</id>
-                    <name>GitHub TobseF Apache Maven Packages</name>
-                    <url>https://maven.pkg.github.com/jwdeveloper/SpigotTester</url>
+                    <name>Spigot Tester</name>
+                    <url>https://maven.pkg.github.com/jwdeveloper/spigottester</url>
                 </repository>
             </repositories>
         </profile>
