@@ -14,7 +14,7 @@ jobs:
         with:
           java-version: 16
       - name: Maven build
-        run: mvn --file pom.xml package
+        run: mvn --file pom.xml -Dversion=1.1.1 package
 
   deploy:
 
