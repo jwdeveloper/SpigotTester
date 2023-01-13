@@ -27,7 +27,10 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>jw.spigot.tester</groupId>
   <artifactId>SpigotTester</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>${version}</version>
+  <properties>
+    <version>0.0.1</version>
+  </properties>
   <build>
     <plugins>
       <plugin>
