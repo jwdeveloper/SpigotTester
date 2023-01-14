@@ -15,7 +15,9 @@ jobs:
           java-version: 16
       - name: Maven build
         run: mvn --file pom.xml -Dversion=1.1.1 package
-
+      - name: siema
+        run: echo {{secrets.GITHUB_USERNAME}}
+  
   deploy:
 
     runs-on: ubuntu-latest
