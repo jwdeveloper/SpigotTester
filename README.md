@@ -1,44 +1,24 @@
 # SpigotTester
 Library for Integration testing plugins with Spigot/Bukkit API
-* Tests must be located in the Plugin package 
 
-Example Initialization 
+Config
+```yaml
+#Closing server when tests are done
+close-server-after-tests: false
 
-```java
-public class MyPlugin extends JavaPlugin {
-    @Override
-    public void onEnable() {
-        SpigotTester.create(this)
-                //will parameter will be passed to test constructor
-                .withParameter(this, JavaPlugin.class)
-                .configure(options ->
-                {
-                    //tests will be running in order
-                    options.setRunInParallel(false);
+#Display tests info in console
+display-logs: true
 
-                    //tests will be running in parallel
-                    options.setRunInParallel(true);
+#Generate report.html it's simple website that visualize tests result
+open-report-in-website: true
 
-                    //output report file path
-                    options.setReportPath("...");
-                })
-                .onTest(result ->
-                {
-                    Bukkit.getLogger().info("Tests info: "+result.toString());
-                })
-                .onFinish(report ->
-                {
-                    Bukkit.getLogger().info("Tests finished report: "+report.toString());
-                })
-                .onException(e ->
-                {
-                    e.printStackTrace();
-                })
-                .run();
-    }
-}
+#lists of plugins that constains SpigotTests but should be ignored
+ignore-plugins:
+  - "Example"
 ```
-Example Test:
+
+
+Example Plugin tests:
 
 ```java 
 import io.spigot.MyPlugin;
@@ -50,9 +30,9 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 public class ServerTest implements SpigotTest {
-    private final MyPlugin plugin;
+    private final Plugin plugin;
 
-    public ServerTest(MyPlugin plugin) {
+    public ServerTest(Plugin plugin) {
         this.plugin = plugin;
     }
 
