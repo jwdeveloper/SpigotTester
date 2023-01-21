@@ -1,0 +1,5 @@
+name: ExamplePluginToTest
+version: '${project.version}'
+main: io.github.jwdeveloper.spigot.exampleplugintotest.Main
+api-version: 1.16
+softdepend: [SpigotTester]
