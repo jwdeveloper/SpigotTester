@@ -1,0 +1,13 @@
+
+#Closing server when tests are done
+close-server-after-tests: false
+
+#Display tests info in console
+display-logs: true
+
+#Generate report.html it's simple website that visualize tests result
+open-report-in-website: true
+
+#lists of plugins that constains SpigotTests but should be ignored
+ignore-plugins:
+  - "Example"

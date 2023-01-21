@@ -1,0 +1,5 @@
+name: SpigotTester
+version: '${project.version}'
+main: io.github.jwdeveloper.spigot.tester.plugin.PluginMain
+load: STARTUP
+api-version: 1.16
