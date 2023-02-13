@@ -1,0 +1,143 @@
+{
+  "reportId": "0d984a6c-40f6-40e1-b63b-24237f4ff8ad",
+  "createdAt": "2023-01-21 10:31:04.2222462+01",
+  "serverVersion": "3170-Spigot-a483d2c-ec116f6 (MC: 1.17)",
+  "spigotVersion": "1.17-R0.1-SNAPSHOT",
+  "spigotTesterVersion": "1.0.0",
+  "plugins": [
+    {
+      "pluginVersion": "1.0.0",
+      "pluginName": "ExamplePluginToTest",
+      "classResults": [
+        {
+          "className": "ShouldLoadPlugin",
+          "classPackage": "io.github.jwdeveloper.spigot.exampleplugintotest.tests",
+          "isIgnored": false,
+          "isPassed": true,
+          "testMethods": [
+            {
+              "name": "ShouldStart()",
+              "isPassed": false,
+              "executionTime": 0.2577,
+              "isIgnored": false,
+              "errorMessage": "",
+              "stackTrace": ""
+            },
+            {
+              "name": "ShouldEnd()",
+              "isPassed": true,
+              "executionTime": 0.2577,
+              "isIgnored": false,
+              "errorMessage": "",
+              "stackTrace": ""
+            },
+            {
+              "name": "Should not work",
+              "isPassed": false,
+              "executionTime": 0.2577,
+              "isIgnored": false,
+              "errorMessage": "",
+              "stackTrace": ""
+            }
+          ]
+        },
+        {
+          "className": "Should do something else",
+          "classPackage": "io.github.jwdeveloper.spigot.exampleplugintotest.tests",
+          "isIgnored": false,
+          "isPassed": true,
+          "testMethods": [
+            {
+              "name": "ShouldStart()",
+              "isPassed": true,
+              "executionTime": 0.2577,
+              "isIgnored": false,
+              "errorMessage": "",
+              "stackTrace": ""
+            },
+            {
+              "name": "ShouldEnd()",
+              "isPassed": true,
+              "executionTime": 0.2577,
+              "isIgnored": false,
+              "errorMessage": "",
+              "stackTrace": ""
+            },
+            {
+              "name": "Should not work",
+              "isPassed": false,
+              "executionTime": 0.2577,
+              "isIgnored": false,
+              "errorMessage": "",
+              "stackTrace": ""
+            }
+          ]
+        },
+        {
+          "className": "Should do something else",
+          "classPackage": "io.github.jwdeveloper.spigot.exampleplugintotest.tests",
+          "isIgnored": false,
+          "isPassed": true,
+          "testMethods": [
+            {
+              "name": "ShouldStart()",
+              "isPassed": true,
+              "executionTime": 0.2577,
+              "isIgnored": false,
+              "errorMessage": "",
+              "stackTrace": ""
+            },
+            {
+              "name": "ShouldEnd()",
+              "isPassed": true,
+              "executionTime": 0.2577,
+              "isIgnored": false,
+              "errorMessage": "",
+              "stackTrace": ""
+            },
+            {
+              "name": "Should not work",
+              "isPassed": false,
+              "executionTime": 0.2577,
+              "isIgnored": false,
+              "errorMessage": "",
+              "stackTrace": ""
+            }
+          ]
+        },
+        {
+          "className": "Should do something else",
+          "classPackage": "io.github.jwdeveloper.spigot.exampleplugintotest.tests",
+          "isIgnored": false,
+          "isPassed": true,
+          "testMethods": [
+            {
+              "name": "ShouldStart()",
+              "isPassed": true,
+              "executionTime": 0.2577,
+              "isIgnored": false,
+              "errorMessage": "",
+              "stackTrace": ""
+            },
+            {
+              "name": "ShouldEnd()",
+              "isPassed": true,
+              "executionTime": 0.2577,
+              "isIgnored": false,
+              "errorMessage": "",
+              "stackTrace": ""
+            },
+            {
+              "name": "Should not work",
+              "isPassed": false,
+              "executionTime": 0.2577,
+              "isIgnored": false,
+              "errorMessage": "",
+              "stackTrace": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

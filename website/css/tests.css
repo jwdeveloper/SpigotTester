@@ -1,0 +1,91 @@
+body
+{
+  background: #dbdbdb;
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
+  overflow-y: scroll; /* Show vertical scrollbar */
+}
+
+
+.tests-panel {
+    margin-top: 0.2em;
+    padding: 1px;
+    -webkit-box-shadow: 2px 14px 33px -18px rgba(66, 68, 90, 1);
+    -moz-box-shadow: 2px 14px 33px -18px rgba(66, 68, 90, 1);
+    box-shadow: 2px 14px 33px -18px rgba(66, 68, 90, 1);
+}
+
+.tests-panel-plugin
+{
+   padding: 0.2em;
+   background-color: rgb(218, 218, 218);
+}
+
+
+.tests-class-panel {
+    padding: 20px;
+    background-color: rgb(243, 243, 243);
+}
+
+.tests-panle-method {
+    margin-top: 0.2em;
+    padding: 1em;
+    background-color: rgb(243, 243, 243);
+    border-left: 0.5em;
+    border-color: rgb(187, 30, 10);
+    border-left-style: solid;
+}
+
+
+.tests-class-panel:hover {
+    cursor: pointer;
+    background-color: rgb(255, 253, 253);
+ 
+}
+
+
+.passed-method {
+    border-color: rgb(6, 156, 106);
+}
+
+.not-passed {
+    border-color: rgb(187, 30, 10);
+    color: rgb(187, 30, 10);
+}
+
+.passed {
+
+    color: rgb(6, 156, 106);
+}
+
+.test-panel-icon {
+    size: 2em;
+    height: 3em;
+    width: 3em;
+}
+
+.tests-panel-info {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.stack-trace-box {
+    color: black;
+    background-color: rgb(216, 215, 215);
+    border: 2em;
+    border-radius: 0.5em;
+    padding: 1em;
+}
+
+.tests-panel-info-time {
+    margin-right: 1em;
+}
+
+.tests-panel-info-total {
+    margin-right: 1em;
+}
+
+.tests-panel-info-passed {
+    margin-right: 1em;
+}
