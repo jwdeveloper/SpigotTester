@@ -51,7 +51,7 @@ public class ServerTest implements SpigotTest {
 ```
 
 To perform tests put SpigotTester and your plugin to `server/plugins` folder.
-Run server when server will be loaded SpigotTester perform all tests and generate report `server/plugins/SpigotTester/report.json`  
+Run server, when server will be loaded SpigotTester perform all tests and generate report `server/plugins/SpigotTester/report.json`  
 After that server will be automatically shut down.
 
 
