@@ -27,9 +27,6 @@ package io.github.jwdeveloper.spigot.tester.implementation;
 import io.github.jwdeveloper.spigot.tester.plugin.PluginMain;
 import org.bukkit.Bukkit;
 import org.bukkit.event.*;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.server.BroadcastMessageEvent;
-import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.plugin.RegisteredListener;
 
 import java.util.ArrayList;

@@ -26,9 +26,7 @@ package io.github.jwdeveloper.spigot.tester.api.data;
 
 import lombok.Data;
 
-import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Data
 public class TestReport

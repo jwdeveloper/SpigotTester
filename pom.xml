@@ -31,7 +31,7 @@
     <name>Spigot Tester</name>
     <description>Library for integration test with Spigot/Bukkit</description>
     <url>https://github.com/jwdeveloper/SpigotTester</url>
-
+    <packaging>jar</packaging>
     <properties>
         <java.version>16</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -39,6 +39,7 @@
 
     <build>
         <finalName>SpigotTester</finalName>
+        <sourceDirectory>src/main/java</sourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -47,6 +48,9 @@
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
+                    <includes>
+                        <include>**</include>
+                    </includes>
                 </configuration>
             </plugin>
             <plugin>
@@ -68,7 +72,7 @@
         </plugins>
         <resources>
             <resource>
-                <directory>src/resources</directory>
+                <directory>src/main/resources</directory>
                 <filtering>true</filtering>
             </resource>
         </resources>
@@ -97,8 +101,7 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.24</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
-
     </dependencies>
 </project>
