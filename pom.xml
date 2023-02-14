@@ -27,7 +27,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.jwdeveloper.spigot.tester</groupId>
     <artifactId>spigot-tester</artifactId>
-    <version>0.2.6-Release</version>
+    <version>0.2.5-Release</version>
     <name>Spigot Tester</name>
     <description>Library for integration test with Spigot/Bukkit</description>
     <url>https://github.com/jwdeveloper/SpigotTester</url>
