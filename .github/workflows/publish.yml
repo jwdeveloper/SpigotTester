@@ -35,22 +35,11 @@ jobs:
           short_tags: false
           bump_each_commit: false
 
-    - name: 2.6  Update version in pom.xml
-      run: sed -i "s/<version>.*<\/version>/<version>${{ steps.version.outputs.version_tag}}<\/version>/" pom.xml
-    - name: Commit changes
-      run: |
-            git config --local user.email "action@github.com"
-            git config --local user.name "GitHub Action"
-            git add pom.xml
-            git commit -m "Update version in pom.xml"
-    - name: Push changes
-      uses: ad-m/github-push-action@master
-      with:
-       branch: main      
+       
    
     - name: 2.7 Update version in pom.xml (Release only)
-      run: mvn -B versions:set -DnewVersion=${{ steps.version.outputs.version_tag}} -DgenerateBackupPoms=false
-    
+      run: mvn versions:set -DnewVersion=${{steps.version.outputs.version_tag}} 
+           
     - name: 3 Build with Maven
       run: mvn package -P publish --file pom.xml  
   
@@ -80,3 +69,13 @@ jobs:
           files: |
               staging/*.jar
              
+    - name: 9 Ovverride pom
+      run: |
+            git config --local user.email "action@github.com"
+            git config --local user.name "GitHub Action"
+            git add pom.xml
+            git commit -m "Update version in pom.xml"
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+       branch: master            
