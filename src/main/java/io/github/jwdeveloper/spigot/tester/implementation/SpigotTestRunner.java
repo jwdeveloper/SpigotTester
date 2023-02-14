@@ -86,16 +86,7 @@ public class SpigotTestRunner implements TestRunner {
         return report;
     }
 
-    private void waitForAllTest(List<Future<TestClassResult>> futures) throws InterruptedException {
-        while (true) {
-            Thread.sleep(5);
-            var working = futures.stream().filter(e -> !e.isDone()).toList();
-            if (working.size() != 0) {
-                continue;
-            }
-            break;
-        }
-    }
+ 
 
     public TestClassResult performClassTest(TestClassModel model) {
         var result = new TestClassResult();

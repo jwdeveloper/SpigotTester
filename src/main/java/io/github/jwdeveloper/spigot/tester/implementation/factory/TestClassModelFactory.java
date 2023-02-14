@@ -32,6 +32,7 @@ import io.github.jwdeveloper.spigot.tester.api.models.TestMethodModel;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -42,10 +43,10 @@ public class TestClassModelFactory {
 
     private final Function<Class<?>, Object> dependecyProvider;
 
-    public TestClassModelFactory(Function<Class<?>, Object> parameterProvider)
-    {
+    public TestClassModelFactory(Function<Class<?>, Object> parameterProvider) {
         this.dependecyProvider = parameterProvider;
     }
+
     public List<TestClassModel> createTestModels(Collection<Class<?>> testsClasses) throws InvocationTargetException, InstantiationException, IllegalAccessException {
         var result = new ArrayList<TestClassModel>();
         for (var clazz : testsClasses) {
@@ -81,19 +82,17 @@ public class TestClassModelFactory {
         var result = new ArrayList<TestMethodModel>();
         var methods = Arrays.stream(clazz.getDeclaredMethods())
                 .filter(c -> c.isAnnotationPresent(Test.class))
-                .toList();
+                .toArray(Method[]::new);
 
 
-        for (var method : methods)
-        {
+        for (var method : methods) {
             var annotation = method.getAnnotation(Test.class);
             var model = new TestMethodModel();
 
             model.setIgnored(annotation.ignore());
-            model.setName(method.getName()+"()");
+            model.setName(method.getName() + "()");
             model.setMethod(method);
-            if(!annotation.name().equals(""))
-            {
+            if (!annotation.name().equals("")) {
                 model.setName(annotation.name());
             }
             result.add(model);
