@@ -2,9 +2,7 @@ name: Publish Plugin
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - 'master'
+
 
 jobs:
   build:
