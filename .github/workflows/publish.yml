@@ -33,9 +33,22 @@ jobs:
           namespace: Release
           change_path: "."
           short_tags: false
-          bump_each_commit: false    
+          bump_each_commit: false
+
+    - name: 2.6  Update version in pom.xml
+      run: sed -i "s/<version>.*<\/version>/<version>${{ steps.version.outputs.version_tag}}<\/version>/" pom.xml
+    - name: Commit changes
+      run: |
+            git config --local user.email "action@github.com"
+            git config --local user.name "GitHub Action"
+            git add pom.xml
+            git commit -m "Update version in pom.xml"
+        - name: Push changes
+          uses: ad-m/github-push-action@master
+          with:
+            branch: main      
    
-    - name: 2.6 Update version in pom.xml (Release only)
+    - name: 2.7 Update version in pom.xml (Release only)
       run: mvn -B versions:set -DnewVersion=${{ steps.version.outputs.version_tag}} -DgenerateBackupPoms=false
     
     - name: 3 Build with Maven
