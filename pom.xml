@@ -27,27 +27,28 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.jwdeveloper.spigot.tester</groupId>
     <artifactId>spigot-tester</artifactId>
-    <version>0.2.7-Release</version>
+    <version>0.3.1</version>
     <name>Spigot Tester</name>
     <description>Library for integration test with Spigot/Bukkit</description>
     <url>https://github.com/jwdeveloper/SpigotTester</url>
     <packaging>jar</packaging>
     <properties>
         <java.version>16</java.version>
+        <maven.compiler.release>16</maven.compiler.release>
+        <maven.compiler.source>16</maven.compiler.source>
+        <maven.compiler.target>16</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <build>
-        <finalName>SpigotTester</finalName>
         <sourceDirectory>src/main/java</sourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
+
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
                     <includes>
                         <include>**</include>
                     </includes>
