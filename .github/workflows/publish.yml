@@ -34,10 +34,12 @@ jobs:
           change_path: "."
           short_tags: false
           bump_each_commit: false    
-        
+   
+    - name: 2.6 Update version in pom.xml (Release only)
+      run: mvn -B versions:set -DnewVersion=${{ steps.version.outputs.version_tag}} -DgenerateBackupPoms=false
     
     - name: 3 Build with Maven
-      run: mvn package -P publish -Dversion=${{steps.version.outputs.version_tag}} --file pom.xml  
+      run: mvn package -P publish --file pom.xml  
   
     - name: 4.1 copy jar files
       run: mkdir staging && cp target/SpigotTester.jar staging
