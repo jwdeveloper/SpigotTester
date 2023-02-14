@@ -26,17 +26,19 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.jwdeveloper.spigot.tester</groupId>
-    <artifactId>plugin-tester</artifactId>
+    <artifactId>spigot-tester</artifactId>
     <version>1.1.1</version>
     <name>Spigot Tester</name>
     <description>Library for integration test with Spigot/Bukkit</description>
     <url>https://github.com/jwdeveloper/SpigotTester</url>
+
     <properties>
         <java.version>16</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <build>
+        <finalName>SpigotTester</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

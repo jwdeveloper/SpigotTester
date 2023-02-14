@@ -27,15 +27,46 @@ package io.github.jwdeveloper.spigot.exampleplugintotest.tests;
 import io.github.jwdeveloper.spigot.tester.api.SpigotTest;
 import io.github.jwdeveloper.spigot.tester.api.annotations.Test;
 import io.github.jwdeveloper.spigot.tester.api.assertions.SpigotAssertion;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class ShouldLoadPlugin implements SpigotTest
 {
+    private Player player;
+
+    @Override
+    public void beforeAll() {
+        player = Bukkit.getOnlinePlayers().stream().findAny().get();
+    }
 
 
     @Test
-    public void ShouldStart()
+    public void shouldTriggerCommands()
     {
+        player.performCommand("plugins");
+        Bukkit.getConsoleSender().sendMessage("elo elo elo");
+        Bukkit.broadcastMessage("Siema wam");
+        Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), "plugins");
+        SpigotAssertion.shouldInvokeEvent(event ->
+        {
+
+        }, PlayerTeleportEvent.class);
         SpigotAssertion.shouldBeTrue(true);
     }
+
+    @Test
+    public void shouldTeleport2Times()
+    {
+        player.teleport(new Location(Bukkit.getWorlds().get(0), 0,100,0));
+        player.teleport(new Location(Bukkit.getWorlds().get(0), 0,100,0));
+        SpigotAssertion.shouldInvokeEvent(event ->
+        {
+
+        }, PlayerTeleportEvent.class);
+        SpigotAssertion.shouldBeTrue(true);
+    }
+
 
 }

@@ -41,7 +41,7 @@ import java.util.logging.Level;
 public class PluginMain extends JavaPlugin {
 
     @Override
-    public void onLoad() {
+    public void onEnable() {
         var plugins = Bukkit.getServer().getPluginManager().getPlugins();
         var config = Config.load(this.getConfig());
         var reports = new ArrayList<TestReport>();
@@ -66,7 +66,7 @@ public class PluginMain extends JavaPlugin {
             Browser.open(body);
         }
         if (config.isCloseServerAfterTests())
-             System.exit(1);
+            System.exit(1);
     }
 
     private TestReport runTests(Plugin plugin) {

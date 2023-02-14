@@ -28,6 +28,7 @@ package io.github.jwdeveloper.spigot.tester.implementation;
 
 import io.github.jwdeveloper.spigot.tester.api.SpigotTest;
 import io.github.jwdeveloper.spigot.tester.api.TestRunner;
+import io.github.jwdeveloper.spigot.tester.api.assertions.SpigotAssertion;
 import io.github.jwdeveloper.spigot.tester.api.data.TestClassResult;
 import io.github.jwdeveloper.spigot.tester.api.data.TestMethodResult;
 import io.github.jwdeveloper.spigot.tester.api.data.TestOptions;
@@ -50,6 +51,7 @@ public class SpigotTestRunner implements TestRunner {
     private final TestOptions options;
     private final Plugin plugin;
     private final EventsHandler eventsHandler;
+    private final SpigotEventProxy eventProxy;
 
     public SpigotTestRunner(Plugin plugin,
                             TestClassModelFactory factory,
@@ -61,6 +63,9 @@ public class SpigotTestRunner implements TestRunner {
         this.options = options;
         this.assemblyScanner = assemblyScanner;
         this.eventsHandler = eventsHandler;
+
+        eventProxy = new SpigotEventProxy();
+        SpigotAssertion.proxy = eventProxy;
     }
 
     @Override
@@ -141,9 +146,11 @@ public class SpigotTestRunner implements TestRunner {
         try {
             var start = System.nanoTime();
 
+            eventProxy.startSession();
             test.before();
             model.getMethod().invoke(test);
             test.after();
+            eventProxy.stopSession();
 
             var finish = System.nanoTime();
             var result = finish - start;

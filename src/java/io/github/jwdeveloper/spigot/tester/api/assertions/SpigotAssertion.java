@@ -24,11 +24,39 @@
 
 package io.github.jwdeveloper.spigot.tester.api.assertions;
 
+import io.github.jwdeveloper.spigot.tester.implementation.SpigotEventProxy;
+import org.apache.commons.lang.NotImplementedException;
+import org.bukkit.Bukkit;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.event.Event;
+
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class SpigotAssertion {
-    public static void shouldBeNotNull(Object object)  {
+
+
+    //TODO not pass SpigotEventProxy as static reference
+    public static SpigotEventProxy proxy;
+
+
+    public static <T extends Event> void shouldInvokeEvent(Consumer<T> onEvent, Class<T> event) {
+
+        Bukkit.getConsoleSender().sendMessage("events",proxy.getEvents().size()+"");
+        throw new NotImplementedException("Sorry not implemented");
+    }
+
+    public static <T extends Event> void shouldInvokeCommand(ConsoleCommandSender player, String... command) {
+        throw new NotImplementedException("Sorry not implemented");
+    }
+
+    public static <T extends Event> void shouldInvokeCommand(ConsoleCommandSender sender, boolean result, String ... command)
+    {
+        throw new NotImplementedException("Sorry not implemented");
+    }
+
+    public static void shouldNotBeNull(Object object) {
         if (object == null) {
             throw new RuntimeException("null object");
         }
@@ -40,7 +68,7 @@ public class SpigotAssertion {
         }
     }
 
-    public static void shouldBeEqual(Object o1, Object o2)  {
+    public static void shouldBeEqual(Object o1, Object o2) {
 
 
         if (!o1.equals(o2)) {
@@ -48,7 +76,7 @@ public class SpigotAssertion {
         }
     }
 
-    public static <T> void shouldContains(List<T> list, T object)  {
+    public static <T> void shouldContains(List<T> list, T object) {
         if (!list.contains(object)) {
             throw new RuntimeException("list not contains object");
         }
@@ -66,16 +94,16 @@ public class SpigotAssertion {
         }
     }
 
-    public static <T> void shouldBeNotEmpty(Collection<T> object) {
-        shouldBeNotNull(object);
+    public static <T> void shouldNotBeEmpty(Collection<T> object) {
+        shouldNotBeNull(object);
         if (object.size() == 0) {
             throw new RuntimeException("should be false");
         }
     }
+
     public static void shouldNotBeEqual(Object o1, Object o2) {
 
-        if (o1.equals(o2))
-        {
+        if (o1.equals(o2)) {
             throw new RuntimeException("should not be equal");
         }
     }
