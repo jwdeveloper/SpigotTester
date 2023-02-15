@@ -28,6 +28,7 @@ package io.github.jwdeveloper.spigot.tester.implementation;
 import lombok.Getter;
 
 import java.io.IOException;
+import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -38,12 +39,12 @@ public class JarScanner {
     private final List<Class<?>> classes;
     private final Map<Class<?>, List<Class<?>>> byInterfaceCache;
 
-    private final Map<Class<?>, List<Class<?>>> byParentCatch;
+    private final Map<Class<?>, List<Class<?>>> byParentCache;
 
     public JarScanner(Class<?> clazz) {
         classes = loadPluginClasses(clazz);
         byInterfaceCache = new IdentityHashMap<>();
-        byParentCatch = new HashMap<>();
+        byParentCache = new HashMap<>();
     }
 
 
@@ -53,11 +54,11 @@ public class JarScanner {
         final var url = source.getLocation();
         try (final var zip = new ZipInputStream(url.openStream())) {
             final List<Class<?>> classes = new ArrayList<>();
-            while (true) {
-                final ZipEntry entry = zip.getNextEntry();
-                if (entry == null) break;
+            ZipEntry entry;
+            while ((entry = zip.getNextEntry()) != null) {
                 if (entry.isDirectory()) continue;
                 var name = entry.getName();
+                if(name.startsWith("META-INF")) continue;
                 if (!name.endsWith(".class")) continue;
                 name = name.replace('/', '.').substring(0, name.length() - 6);
                 try {
@@ -74,8 +75,8 @@ public class JarScanner {
     }
 
     public Collection<Class<?>> findBySuperClass(Class<?> parentClass) {
-        if (byParentCatch.containsKey(parentClass)) {
-            return byParentCatch.get(parentClass);
+        if (byParentCache.containsKey(parentClass)) {
+            return byParentCache.get(parentClass);
         }
         var result = new ArrayList<Class<?>>();
         for (var _class : classes) {
@@ -83,24 +84,15 @@ public class JarScanner {
                 result.add(_class);
             }
         }
-        byParentCatch.put(parentClass, result);
+        byParentCache.put(parentClass, result);
         return result;
     }
 
     private boolean isClassContainsType(Class<?> type, Class<?> searchType) {
-
-        while (true) {
-            if (type.isAssignableFrom(searchType)) {
-                return true;
-            }
-            type = type.getSuperclass();
-
-            if (type == null) {
-                return false;
-            }
-            if (type.equals(Object.class)) {
-                return false;
-            }
+        if (searchType.isAssignableFrom(type) && !Modifier.isAbstract(type.getModifiers())) {
+            System.out.println("Found class:" + type.getName());
+            return true;
         }
+        return false;
     }
 }
