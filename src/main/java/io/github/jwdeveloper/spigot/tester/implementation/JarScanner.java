@@ -89,10 +89,6 @@ public class JarScanner {
     }
 
     private boolean isClassContainsType(Class<?> type, Class<?> searchType) {
-        if (searchType.isAssignableFrom(type) && !Modifier.isAbstract(type.getModifiers())) {
-            System.out.println("Found class:" + type.getName());
-            return true;
-        }
-        return false;
+        return searchType.isAssignableFrom(type) && !Modifier.isAbstract(type.getModifiers());
     }
 }
