@@ -63,7 +63,10 @@ public abstract class SpigotTest implements TestMember
     {
         return testContext.playerFactory().createPlayer();
     }
-
+    protected final Player addPlayer(String name)
+    {
+        return testContext.playerFactory().createPlayer(UUID.randomUUID(), name);
+    }
     protected final Player addPlayer(UUID uuid, String name)
     {
         return testContext.playerFactory().createPlayer(uuid, name);
