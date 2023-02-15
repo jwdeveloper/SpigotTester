@@ -26,7 +26,7 @@ package io.github.jwdeveloper.spigot.tester.implementation.gson;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import io.github.jwdeveloper.spigot.tester.implementation.gson.adapters.ExceptionAdapter;
+import io.github.jwdeveloper.spigot.tester.implementation.gson.adapters.ThrowAbleAdapter;
 import io.github.jwdeveloper.spigot.tester.implementation.gson.adapters.OffsetDateTimeAdapter;
 
 import java.io.FileWriter;
@@ -52,7 +52,7 @@ public class JsonUtility {
 
     private Gson getGson() {
         return new GsonBuilder()
-                .registerTypeHierarchyAdapter(Exception.class, new ExceptionAdapter())
+                .registerTypeHierarchyAdapter(Throwable.class, new ThrowAbleAdapter())
                 .registerTypeHierarchyAdapter(OffsetDateTime.class, new OffsetDateTimeAdapter())
                 .setPrettyPrinting()
                 .create();

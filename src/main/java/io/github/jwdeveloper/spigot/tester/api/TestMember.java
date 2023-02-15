@@ -22,18 +22,29 @@
  * SOFTWARE.
  */
 
-package io.github.jwdeveloper.spigot.tester.api.data;
+package io.github.jwdeveloper.spigot.tester.api;
 
-import lombok.Data;
-
-import java.util.List;
-
-@Data
-public class TestReport
+public interface TestMember
 {
-     private String pluginVersion;
+    /**
+     * This method is triggered before all tests
+     */
+     void beforeEachTest();
 
-     private String pluginName;
+    /**
+     * This method is triggered before every method
+     */
+     void before();
 
-     private List<TestClassResult> classResults;
+
+    /**
+     * This method is triggered after every method
+     */
+     void after();
+
+
+    /**
+     * This method is triggered after all tests
+     */
+     void afterEachTest();
 }

@@ -22,21 +22,12 @@
  * SOFTWARE.
  */
 
-package io.github.jwdeveloper.spigot.tester.api.builder;
+package io.github.jwdeveloper.spigot.tester.api.exception;
 
-
-
-
-import io.github.jwdeveloper.spigot.tester.api.data.TestPluginReport;
-
-import java.util.function.Consumer;
-
-public interface ExecutableTestRunnerBuilder extends TestRunnerBuilder<ExecutableTestRunnerBuilder> {
-
-    /**
-     * Runs tests
-     */
-    TestPluginReport run();
-
-    ExecutableTestRunnerBuilder onException(Consumer<Exception> event);
+public class AssertionException extends RuntimeException
+{
+    public AssertionException(String msg)
+    {
+        super(msg);
+    }
 }

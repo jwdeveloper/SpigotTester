@@ -22,21 +22,19 @@
  * SOFTWARE.
  */
 
-package io.github.jwdeveloper.spigot.tester.api.builder;
+package io.github.jwdeveloper.spigot.tester.api;
 
+import io.github.jwdeveloper.spigot.tester.api.assertions.Assertions;
+import io.github.jwdeveloper.spigot.tester.api.players.PlayerFactory;
+import org.bukkit.plugin.Plugin;
 
+public interface TestContext
+{
+     PlayerFactory playerFactory();
 
+     Assertions assertions(Object target);
 
-import io.github.jwdeveloper.spigot.tester.api.data.TestPluginReport;
+     Plugin plugin();
 
-import java.util.function.Consumer;
-
-public interface ExecutableTestRunnerBuilder extends TestRunnerBuilder<ExecutableTestRunnerBuilder> {
-
-    /**
-     * Runs tests
-     */
-    TestPluginReport run();
-
-    ExecutableTestRunnerBuilder onException(Consumer<Exception> event);
+     <T> T getParameter(Class<T> clazz);
 }

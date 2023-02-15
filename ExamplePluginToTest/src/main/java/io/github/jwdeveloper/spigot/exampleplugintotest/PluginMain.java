@@ -22,21 +22,30 @@
  * SOFTWARE.
  */
 
-package io.github.jwdeveloper.spigot.tester.api.builder;
+package io.github.jwdeveloper.spigot.exampleplugintotest;
 
+import io.github.jwdeveloper.spigot.tester.api.SpigotTesterSetup;
+import io.github.jwdeveloper.spigot.tester.api.builder.TestRunnerBuilder;
+import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
+public final class PluginMain extends JavaPlugin implements SpigotTesterSetup {
 
+    private CraftingManager craftingManager;
 
-import io.github.jwdeveloper.spigot.tester.api.data.TestPluginReport;
+    @Override
+    public void onEnable() {
+        // Plugin startup logic
+        craftingManager = new CraftingManager();
+    }
 
-import java.util.function.Consumer;
+    @Override
+    public void onSpigotTesterSetup(TestRunnerBuilder builder) {
+        builder.injectParameter(craftingManager);
+    }
 
-public interface ExecutableTestRunnerBuilder extends TestRunnerBuilder<ExecutableTestRunnerBuilder> {
-
-    /**
-     * Runs tests
-     */
-    TestPluginReport run();
-
-    ExecutableTestRunnerBuilder onException(Consumer<Exception> event);
 }

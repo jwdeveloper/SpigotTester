@@ -25,18 +25,24 @@
 package io.github.jwdeveloper.spigot.tester.implementation.builder;
 
 
+import io.github.jwdeveloper.reflect.implementation.FluentReflect;
+import io.github.jwdeveloper.spigot.tester.api.TestContext;
 import io.github.jwdeveloper.spigot.tester.api.TestRunner;
 import io.github.jwdeveloper.spigot.tester.api.builder.TestRunnerBuilder;
 import io.github.jwdeveloper.spigot.tester.api.data.TestClassResult;
 import io.github.jwdeveloper.spigot.tester.api.data.TestOptions;
-import io.github.jwdeveloper.spigot.tester.api.data.TestReport;
+import io.github.jwdeveloper.spigot.tester.api.data.TestPluginReport;
 import io.github.jwdeveloper.spigot.tester.implementation.EventsHandler;
 import io.github.jwdeveloper.spigot.tester.implementation.JarScanner;
 import io.github.jwdeveloper.spigot.tester.implementation.SpigotTestRunner;
+import io.github.jwdeveloper.spigot.tester.implementation.TestContextImpl;
 import io.github.jwdeveloper.spigot.tester.implementation.factory.TestClassModelFactory;
 import io.github.jwdeveloper.spigot.tester.implementation.gson.JsonUtility;
 import io.github.jwdeveloper.spigot.tester.implementation.handlers.DisplayTestHandler;
 import io.github.jwdeveloper.spigot.tester.implementation.handlers.ReportGeneratorHandler;
+import io.github.jwdeveloper.spigot.tester.implementation.players.FakePlayerFactoryImpl;
+import io.github.jwdeveloper.spigot.tester.implementation.players.NmsCommunicator;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
 import java.io.InvalidClassException;
@@ -50,19 +56,21 @@ public class SpigotTestRunnerBuilder implements TestRunnerBuilder<SpigotTestRunn
     private final Plugin plugin;
     private Function<Class<?>, Object> parameterProvider;
     private final TestOptions options;
-
+    private final NmsCommunicator nmsCommunicator;
     private final EventsHandler eventsHandler;
 
-    public SpigotTestRunnerBuilder(Plugin plugin, TestOptions options) {
+    public SpigotTestRunnerBuilder(Plugin plugin, TestOptions options, NmsCommunicator nmsCommunicator)
+    {
         this.options = options;
         this.plugin = plugin;
         this.eventsHandler = new EventsHandler();
         this.parameters = new HashMap<>();
         parameterProvider = this::defaultDependencyProvider;
+        this.nmsCommunicator = nmsCommunicator;
     }
 
     @Override
-    public SpigotTestRunnerBuilder onFinish(Consumer<TestReport> event) {
+    public SpigotTestRunnerBuilder onFinish(Consumer<TestPluginReport> event) {
         eventsHandler.onFinish(event);
         return this;
     }
@@ -76,19 +84,19 @@ public class SpigotTestRunnerBuilder implements TestRunnerBuilder<SpigotTestRunn
 
 
     @Override
-    public SpigotTestRunnerBuilder withParameterProvider(Function<Class<?>, Object> provider) {
+    public SpigotTestRunnerBuilder parameterProvider(Function<Class<?>, Object> provider) {
         parameterProvider = provider;
         return this;
     }
 
     @Override
-    public SpigotTestRunnerBuilder withParameter(Object parameter) {
+    public SpigotTestRunnerBuilder injectParameter(Object parameter) {
         parameters.put(parameter.getClass(), parameter);
         return this;
     }
 
     @Override
-    public <T> SpigotTestRunnerBuilder withParameter(T parameter, Class<T> type) {
+    public <T> SpigotTestRunnerBuilder injectParameter(T parameter, Class<T> type) {
 
         if (!parameter.getClass().isAssignableFrom(type)) {
             new InvalidClassException(parameter.getClass().getSimpleName() + "isAssignableFrom " + type.getSimpleName());
@@ -112,6 +120,10 @@ public class SpigotTestRunnerBuilder implements TestRunnerBuilder<SpigotTestRunn
                 options,
                 plugin);
 
+        var playerFactory = new FakePlayerFactoryImpl(nmsCommunicator);
+        var testContext = new TestContextImpl(plugin, playerFactory, parameterProvider);
+        parameters.put(TestContext.class, testContext);
+
         var factory = new TestClassModelFactory(parameterProvider);
         var assemblyScanner = new JarScanner(plugin.getClass());
         return new SpigotTestRunner(
@@ -119,7 +131,8 @@ public class SpigotTestRunnerBuilder implements TestRunnerBuilder<SpigotTestRunn
                 factory,
                 assemblyScanner,
                 options,
-                eventsHandler);
+                eventsHandler,
+                testContext);
     }
 
 

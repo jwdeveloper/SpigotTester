@@ -25,7 +25,7 @@
 package io.github.jwdeveloper.spigot.tester.implementation;
 
 import io.github.jwdeveloper.spigot.tester.api.data.TestClassResult;
-import io.github.jwdeveloper.spigot.tester.api.data.TestReport;
+import io.github.jwdeveloper.spigot.tester.api.data.TestPluginReport;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -35,14 +35,14 @@ import java.util.function.Consumer;
 @Data
 public class EventsHandler {
     private List<Consumer<TestClassResult>> onTestEvent = new ArrayList<>();
-    private List<Consumer<TestReport>> onTestFinished = new ArrayList<>();
+    private List<Consumer<TestPluginReport>> onTestFinished = new ArrayList<>();
 
     public void onTest(Consumer<TestClassResult> event)
     {
         onTestEvent.add(event);
     }
 
-    public void onFinish(Consumer<TestReport> event)
+    public void onFinish(Consumer<TestPluginReport> event)
     {
         onTestFinished.add(event);
     }
@@ -51,7 +51,7 @@ public class EventsHandler {
         onTestEvent.stream().forEach(e -> e.accept(event));
     }
 
-    public void invokeOnFinish(TestReport report) {
+    public void invokeOnFinish(TestPluginReport report) {
         onTestFinished.stream().forEach(e -> e.accept(report));
     }
 

@@ -22,62 +22,57 @@
  * SOFTWARE.
  */
 
-package io.github.jwdeveloper.spigot.tester.api;
+package io.github.jwdeveloper.spigot.tester.implementation;
 
+import io.github.jwdeveloper.spigot.tester.api.TestContext;
 import io.github.jwdeveloper.spigot.tester.api.assertions.Assertions;
-import org.bukkit.entity.Player;
+import io.github.jwdeveloper.spigot.tester.api.players.PlayerFactory;
+import io.github.jwdeveloper.spigot.tester.implementation.players.FakePlayerFactoryImpl;
 import org.bukkit.plugin.Plugin;
 
-import java.util.UUID;
+import java.util.function.Function;
 
-public abstract class SpigotTest implements TestMember
-{
-    private final TestContext testContext;
+public class TestContextImpl implements TestContext {
 
-    public SpigotTest(TestContext testContext)
+    private final Plugin plugin;
+    private final FakePlayerFactoryImpl playerFactory;
+    private final Function<Class<?>, Object> parameterProvider;
+
+    public TestContextImpl(Plugin plugin, PlayerFactory playerFactory, Function<Class<?>, Object> parameterProvider) {
+        this.plugin = plugin;
+        this.playerFactory = (FakePlayerFactoryImpl)playerFactory;
+        this.parameterProvider = parameterProvider;
+    }
+
+    public <T> T getParameter(Class<T> tClass)
     {
-        this.testContext = testContext;
+       return (T)parameterProvider.apply(tClass);
     }
 
     @Override
-    public void beforeEachTest() {
-    }
-    @Override
-    public void before() {
+    public PlayerFactory playerFactory() {
+        return playerFactory;
     }
 
     @Override
-    public void after() {
+    public Assertions assertions(Object target) {
+        return new Assertions(target);
     }
 
     @Override
-    public void afterEachTest() {
+    public Plugin plugin() {
+        return plugin;
     }
 
-    protected final Assertions assertion(Object object)
+
+    public void start()
     {
-        return new Assertions(object);
+
+
     }
 
-    protected final Player addPlayer()
+    public void stop()
     {
-        return testContext.playerFactory().createPlayer();
+        playerFactory.clear();
     }
-
-    protected final Player addPlayer(UUID uuid, String name)
-    {
-        return testContext.playerFactory().createPlayer(uuid, name);
-    }
-
-
-    protected final <T> T getParameter(Class<T> clazz)
-    {
-          return testContext.getParameter(clazz);
-    }
-
-    protected final Plugin getPlugin()
-    {
-        return testContext.plugin();
-    }
-
 }

@@ -28,7 +28,6 @@ package io.github.jwdeveloper.spigot.tester.implementation;
 import lombok.Getter;
 
 import java.io.IOException;
-import java.lang.annotation.Annotation;
 import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -39,9 +38,12 @@ public class JarScanner {
     private final List<Class<?>> classes;
     private final Map<Class<?>, List<Class<?>>> byInterfaceCache;
 
+    private final Map<Class<?>, List<Class<?>>> byParentCatch;
+
     public JarScanner(Class<?> clazz) {
         classes = loadPluginClasses(clazz);
         byInterfaceCache = new IdentityHashMap<>();
+        byParentCatch = new HashMap<>();
     }
 
 
@@ -71,20 +73,34 @@ public class JarScanner {
         }
     }
 
-    public Collection<Class<?>> findByInterface(Class<?> _interface) {
-        if (byInterfaceCache.containsKey(_interface)) {
-            return byInterfaceCache.get(_interface);
+    public Collection<Class<?>> findBySuperClass(Class<?> parentClass) {
+        if (byParentCatch.containsKey(parentClass)) {
+            return byParentCatch.get(parentClass);
         }
         var result = new ArrayList<Class<?>>();
         for (var _class : classes) {
-            for (var _classInterface : _class.getInterfaces()) {
-                if (_classInterface.equals(_interface)) {
-                    result.add(_class);
-                    break;
-                }
+            if (isClassContainsType(_class, parentClass)) {
+                result.add(_class);
             }
         }
-        byInterfaceCache.put(_interface, result);
+        byParentCatch.put(parentClass, result);
         return result;
+    }
+
+    private boolean isClassContainsType(Class<?> type, Class<?> searchType) {
+
+        while (true) {
+            if (type.isAssignableFrom(searchType)) {
+                return true;
+            }
+            type = type.getSuperclass();
+
+            if (type == null) {
+                return false;
+            }
+            if (type.equals(Object.class)) {
+                return false;
+            }
+        }
     }
 }

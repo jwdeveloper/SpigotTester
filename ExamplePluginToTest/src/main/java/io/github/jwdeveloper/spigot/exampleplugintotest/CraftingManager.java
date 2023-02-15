@@ -22,21 +22,14 @@
  * SOFTWARE.
  */
 
-package io.github.jwdeveloper.spigot.tester.api.builder;
+package io.github.jwdeveloper.spigot.exampleplugintotest;
 
+import org.bukkit.entity.Player;
 
-
-
-import io.github.jwdeveloper.spigot.tester.api.data.TestPluginReport;
-
-import java.util.function.Consumer;
-
-public interface ExecutableTestRunnerBuilder extends TestRunnerBuilder<ExecutableTestRunnerBuilder> {
-
-    /**
-     * Runs tests
-     */
-    TestPluginReport run();
-
-    ExecutableTestRunnerBuilder onException(Consumer<Exception> event);
+public class CraftingManager
+{
+    public boolean canPlayerUseCrating(Player player)
+    {
+        return player.hasPermission("crating");
+    }
 }

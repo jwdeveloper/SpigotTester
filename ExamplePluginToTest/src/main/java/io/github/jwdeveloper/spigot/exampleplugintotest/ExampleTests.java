@@ -22,50 +22,41 @@
  * SOFTWARE.
  */
 
-package io.github.jwdeveloper.spigot.exampleplugintotest.tests;
+package io.github.jwdeveloper.spigot.exampleplugintotest;
+
 
 import io.github.jwdeveloper.spigot.tester.api.SpigotTest;
+import io.github.jwdeveloper.spigot.tester.api.TestContext;
 import io.github.jwdeveloper.spigot.tester.api.annotations.Test;
-import io.github.jwdeveloper.spigot.tester.api.assertions.SpigotAssertion;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.permissions.PermissionAttachment;
 
-public class ShouldLoadPlugin implements SpigotTest
-{
-    private Player player;
+public class ExampleTests extends SpigotTest {
 
-    @Override
-    public void beforeAll() {
-        player = Bukkit.getOnlinePlayers().stream().findAny().get();
+    public ExampleTests(TestContext testContext) {
+        super(testContext);
     }
 
 
-    @Test
-    public void shouldTriggerCommands()
-    {
-        player.performCommand("plugins");
-        Bukkit.getConsoleSender().sendMessage("elo elo elo");
-        Bukkit.broadcastMessage("Siema wam");
-        Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), "plugins");
-        SpigotAssertion.shouldInvokeEvent(event ->
-        {
+    @Test(name = "crafting permission test")
+    public void shouldUseCrafting() {
+        //Arrange
+        Player player = addPlayer();
+        CraftingManager craftingManager = getParameter(CraftingManager.class);
+        PermissionAttachment attachment = player.addAttachment(getPlugin());
+        attachment.setPermission("crating", true);
+        player.setOp(true);
+        player.setGameMode(GameMode.CREATIVE);
+        player.setGlowing(true);
+        player.chat("/teleport " + player.getName() + " 91 63 -4");
 
-        }, PlayerTeleportEvent.class);
-        SpigotAssertion.shouldBeTrue(true);
-    }
+        //Act
+        boolean result = craftingManager.canPlayerUseCrating(player);
 
-    @Test
-    public void shouldTeleport2Times()
-    {
-        player.teleport(new Location(Bukkit.getWorlds().get(0), 0,100,0));
-        player.teleport(new Location(Bukkit.getWorlds().get(0), 0,100,0));
-        SpigotAssertion.shouldInvokeEvent(event ->
-        {
-
-        }, PlayerTeleportEvent.class);
-        SpigotAssertion.shouldBeTrue(true);
+        //Assert
+        assertion(result).shouldBeTrue();
     }
 
 

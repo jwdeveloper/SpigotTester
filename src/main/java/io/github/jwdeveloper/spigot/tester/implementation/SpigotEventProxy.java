@@ -41,7 +41,6 @@ public class SpigotEventProxy implements Listener {
         PluginMain.getPlugin(PluginMain.class).getServer().getPluginManager().registerEvents(this, PluginMain.getPlugin(PluginMain.class));
         listener = new RegisteredListener(this, (listener, event) ->
         {
-            Bukkit.getConsoleSender().sendMessage(event.getEventName());
             events.add(event);
         }, EventPriority.MONITOR, PluginMain.getPlugin(PluginMain.class), false);
     }

@@ -25,7 +25,7 @@
 package io.github.jwdeveloper.spigot.tester.api;
 
 
-import io.github.jwdeveloper.spigot.tester.api.data.TestReport;
+import io.github.jwdeveloper.spigot.tester.api.data.TestPluginReport;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.ExecutionException;
@@ -33,5 +33,5 @@ import java.util.concurrent.ExecutionException;
 
 public interface TestRunner
 {
-    TestReport run() throws InvocationTargetException, InstantiationException, IllegalAccessException, ExecutionException, InterruptedException;
+    TestPluginReport run() throws InvocationTargetException, InstantiationException, IllegalAccessException, ExecutionException, InterruptedException;
 }

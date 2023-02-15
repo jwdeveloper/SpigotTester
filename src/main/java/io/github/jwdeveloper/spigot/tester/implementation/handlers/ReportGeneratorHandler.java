@@ -25,7 +25,7 @@
 package io.github.jwdeveloper.spigot.tester.implementation.handlers;
 
 import io.github.jwdeveloper.spigot.tester.api.data.TestOptions;
-import io.github.jwdeveloper.spigot.tester.api.data.TestReport;
+import io.github.jwdeveloper.spigot.tester.api.data.TestPluginReport;
 import io.github.jwdeveloper.spigot.tester.implementation.EventsHandler;
 import io.github.jwdeveloper.spigot.tester.implementation.gson.JsonUtility;
 import org.bukkit.Bukkit;
@@ -52,7 +52,7 @@ public class ReportGeneratorHandler {
     }
 
 
-    public void onFinish(TestReport report) {
+    public void onFinish(TestPluginReport report) {
         if (!options.isGenerateReport()) {
             return;
         }
@@ -66,6 +66,7 @@ public class ReportGeneratorHandler {
         if (reportName == null) {
             reportName = "report";
         }
+
 
         try {
             json.save(report, outputPath, reportName);

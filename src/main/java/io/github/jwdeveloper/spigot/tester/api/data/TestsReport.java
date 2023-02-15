@@ -22,21 +22,21 @@
  * SOFTWARE.
  */
 
-package io.github.jwdeveloper.spigot.tester.api.builder;
+package io.github.jwdeveloper.spigot.tester.api.data;
 
+import lombok.Data;
 
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
-
-import io.github.jwdeveloper.spigot.tester.api.data.TestPluginReport;
-
-import java.util.function.Consumer;
-
-public interface ExecutableTestRunnerBuilder extends TestRunnerBuilder<ExecutableTestRunnerBuilder> {
-
-    /**
-     * Runs tests
-     */
-    TestPluginReport run();
-
-    ExecutableTestRunnerBuilder onException(Consumer<Exception> event);
+@Data
+public class TestsReport {
+    private boolean isPassed = true;
+    private String reportId;
+    private OffsetDateTime createdAt;
+    private String serverVersion;
+    private String spigotVersion;
+    private String spigotTesterVersion;
+    private List<TestPluginReport> plugins = new ArrayList<TestPluginReport>();
 }

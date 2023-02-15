@@ -24,90 +24,150 @@
 
 package io.github.jwdeveloper.spigot.tester.plugin;
 
+import io.github.jwdeveloper.reflect.api.exceptions.ValidationException;
+import io.github.jwdeveloper.reflect.implementation.FluentReflect;
 import io.github.jwdeveloper.spigot.tester.SpigotTesterAPI;
-import io.github.jwdeveloper.spigot.tester.api.data.TestReport;
+import io.github.jwdeveloper.spigot.tester.api.data.TestOptions;
+import io.github.jwdeveloper.spigot.tester.api.data.TestPluginReport;
+import io.github.jwdeveloper.spigot.tester.api.data.TestsReport;
 import io.github.jwdeveloper.spigot.tester.implementation.gson.JsonUtility;
+import io.github.jwdeveloper.spigot.tester.implementation.players.NmsCommunicator;
+import io.github.jwdeveloper.spigot.tester.temp.EventListener;
+import io.github.jwdeveloper.spigot.tester.temp.ValidationExceptionDisplay;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 
 public class PluginMain extends JavaPlugin {
 
+
     @Override
     public void onEnable() {
-        var plugins = Bukkit.getServer().getPluginManager().getPlugins();
-        var config = Config.load(this.getConfig());
-        var reports = new ArrayList<TestReport>();
 
-        if (!config.isDisplayLogs())
-            getLogger().setLevel(Level.OFF);
 
-        for (var plugin : plugins) {
-            if (plugin.equals(this)) {
-                continue;
-            }
-            if (config.getIgnorePlugins().contains(plugin.getName())) {
-                continue;
-            }
-            var report = runTests(plugin);
-            reports.add(report);
-        }
-        var reportJson = saveReport(reports);
-        if(config.isOpenWebsite())
+
+        getServer().getPluginManager().registerEvents(new EventListener(), this);
+        waitForAllPluginToBeEnabled(plugins ->
         {
-            String body = Base64.getEncoder().encodeToString(reportJson.getBytes());
-            Browser.open(body);
-        }
-        if (config.isCloseServerAfterTests())
-            System.exit(1);
+            for(Player p : Bukkit.getOnlinePlayers())
+            {
+                Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN+"player performing command "+p.getName());
+                p.chat("/teleport "+p.getName()+" 1 100 1");
+                p.chat("siema");
+            }
+            getLogger().info("Server version: "+PluginMain.getVersion());
+            var optional = createNmsCommunicator();
+            if (optional.isEmpty()) {
+                getLogger().warning("SpigotTester will not working for this minecraft version, try different");
+                return;
+            }
+            var nmsCommunicator = optional.get();
+            getLogger().info("Preparing to start tests");
+            var config = Config.load(this.getConfig());
+            var reports = new ArrayList<TestPluginReport>();
+
+            if (!config.isDisplayLogs())
+                getLogger().setLevel(Level.OFF);
+
+            for (var plugin : plugins) {
+                if (config.getIgnorePlugins().contains(plugin.getName())) {
+                    continue;
+                }
+                var report = runTests(plugin, nmsCommunicator);
+                reports.add(report);
+            }
+            var reportJson = saveReport(reports);
+            if (config.isOpenWebsite()) {
+                String body = Base64.getEncoder().encodeToString(reportJson.getBytes());
+                Browser.open(body);
+            }
+            getLogger().info("Tests done");
+            if (config.isCloseServerAfterTests())
+                System.exit(1);
+        });
+
     }
 
-    private TestReport runTests(Plugin plugin) {
-        var testReport = new TestReport();
+    private Optional<NmsCommunicator> createNmsCommunicator() {
         try {
-            getLogger().info(plugin.getDescription().getName() + " Starting plugin");
-            getLogger().info(plugin.getDescription().getName() + " OnLoad");
-            plugin.onLoad();
-            getLogger().info(plugin.getDescription().getName() + " OnEnable");
-            plugin.onEnable();
-            getLogger().info(plugin.getDescription().getName() + " Running tests");
-            testReport = SpigotTesterAPI.create(plugin).withParameter(plugin, Plugin.class).configure(testOptions ->
-            {
-                testOptions.setGenerateReport(false);
-            }).run();
-            getLogger().info(plugin.getDescription().getName() + " OnDisable");
-            plugin.onDisable();
-        } catch (Exception e) {
+            var fluentReflect = new FluentReflect(getVersion());
+            var nmsCommunicator = new NmsCommunicator(fluentReflect);
+            return Optional.of(nmsCommunicator);
+        } catch (ValidationException e) {
+            ValidationExceptionDisplay.showError(e);
+        } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-        return testReport;
+        return Optional.empty();
+    }
+
+    public static String getVersion()
+    {
+        var packageName = Bukkit.getServer().getClass().getPackageName();
+        var index = packageName.lastIndexOf('.');
+        var version = packageName.substring(index+1);
+        return version;
+    }
+
+    public void waitForAllPluginToBeEnabled(Consumer<List<Plugin>> onEnable) {
+        var plugins = Bukkit.getPluginManager().getPlugins();
+        Bukkit.getScheduler().runTaskTimer(this, (task) ->
+        {
+            for (var plugin : plugins) {
+                if (!plugin.isEnabled())
+                    return;
+            }
+
+            List<Plugin> pluginsToTest = new ArrayList<>();
+            for (var plugin : plugins) {
+                if (plugin.equals(this))
+                    continue;
+                pluginsToTest.add(plugin);
+            }
+            onEnable.accept(pluginsToTest);
+            task.cancel();
+        }, 10, 10);
+    }
+
+    private TestPluginReport runTests(Plugin plugin, NmsCommunicator nmsCommunicator) {
+        getLogger().info("Running tests for plugin: " + plugin.getDescription().getName());
+        return SpigotTesterAPI.create(plugin, new TestOptions(), nmsCommunicator)
+                .configure(testOptions ->
+                {
+                    testOptions.setGenerateReport(false);
+                })
+                .injectParameter(plugin, Plugin.class)
+                .onException(Throwable::printStackTrace)
+                .run();
     }
 
 
-    private String saveReport(List<TestReport> reports)
-    {
-        var report = new PluginsReport();
+    private String saveReport(List<TestPluginReport> reports) {
+        var report = new TestsReport();
         report.setReportId(UUID.randomUUID().toString());
         report.setCreatedAt(OffsetDateTime.now());
         report.setSpigotVersion(Bukkit.getBukkitVersion());
         report.setServerVersion(Bukkit.getVersion());
         report.setSpigotTesterVersion(this.getDescription().getVersion());
         report.setPlugins(reports);
+        for (var pluginReport : reports) {
+            if (!pluginReport.isPassed()) {
+                report.setPassed(false);
+                break;
+            }
+        }
 
         var json = new JsonUtility();
-        try
-        {
-           return json.save(report, this.getDataFolder().getAbsolutePath(), "report");
-        }
-        catch (Exception e)
-        {
+        try {
+            return json.save(report, this.getDataFolder().getAbsolutePath(), "report");
+        } catch (Exception e) {
             getLogger().info("Unable to save tests report");
             return "";
         }

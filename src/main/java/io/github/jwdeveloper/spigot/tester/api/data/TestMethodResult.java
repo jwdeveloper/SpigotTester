@@ -30,7 +30,7 @@ import lombok.Data;
 public class TestMethodResult {
     private String name;
     private boolean isPassed;
-    private Exception exception;
+    private Throwable exception;
     private double executionTime;
     private boolean isIgnored;
     private String errorMessage = "";

@@ -22,21 +22,29 @@
  * SOFTWARE.
  */
 
-package io.github.jwdeveloper.spigot.tester.api.builder;
+package io.github.jwdeveloper.spigot.tester.implementation.players;
 
+import lombok.Getter;
+import org.bukkit.entity.Player;
 
+public class FakePlayer {
+    @Getter
+    private final Player player;
+    private final Object handle;
+    private final NmsCommunicator communicator;
 
+    public FakePlayer(Player player, Object entityPlayerHandle, NmsCommunicator communicator) {
+           this.player = player;
+           this.handle = entityPlayerHandle;
+           this.communicator = communicator;
+    }
 
-import io.github.jwdeveloper.spigot.tester.api.data.TestPluginReport;
+    public void connect() {
+        communicator.connect(handle);
+    }
 
-import java.util.function.Consumer;
+    public void disconnect() {
+        communicator.disconnect(handle);
+    }
 
-public interface ExecutableTestRunnerBuilder extends TestRunnerBuilder<ExecutableTestRunnerBuilder> {
-
-    /**
-     * Runs tests
-     */
-    TestPluginReport run();
-
-    ExecutableTestRunnerBuilder onException(Consumer<Exception> event);
 }

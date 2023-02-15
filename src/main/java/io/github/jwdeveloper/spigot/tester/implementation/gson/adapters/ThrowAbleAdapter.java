@@ -22,21 +22,21 @@
  * SOFTWARE.
  */
 
-package io.github.jwdeveloper.spigot.tester.api.builder;
+package io.github.jwdeveloper.spigot.tester.implementation.gson.adapters;
 
+import com.google.gson.*;
 
+import java.lang.reflect.Type;
 
+public class ThrowAbleAdapter implements JsonSerializer<Throwable>, JsonDeserializer<Throwable> {
+    @Override
+    public Throwable deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        return new Throwable("Exception could not be loaded from file");
+    }
 
-import io.github.jwdeveloper.spigot.tester.api.data.TestPluginReport;
-
-import java.util.function.Consumer;
-
-public interface ExecutableTestRunnerBuilder extends TestRunnerBuilder<ExecutableTestRunnerBuilder> {
-
-    /**
-     * Runs tests
-     */
-    TestPluginReport run();
-
-    ExecutableTestRunnerBuilder onException(Consumer<Exception> event);
+    @Override
+    public JsonElement serialize(Throwable src, Type typeOfSrc, JsonSerializationContext context) {
+        final JsonObject obj = new JsonObject();
+        return obj;
+    }
 }

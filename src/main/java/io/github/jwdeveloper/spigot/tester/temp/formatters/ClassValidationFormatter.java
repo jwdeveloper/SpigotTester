@@ -22,21 +22,32 @@
  * SOFTWARE.
  */
 
-package io.github.jwdeveloper.spigot.tester.plugin;
+package io.github.jwdeveloper.spigot.tester.temp.formatters;
 
-import io.github.jwdeveloper.spigot.tester.api.data.TestReport;
+import io.github.jwdeveloper.reflect.api.exceptions.ClassValidationException;
+import io.github.jwdeveloper.reflect.api.exceptions.ConstructorValidationException;
+import io.github.jwdeveloper.reflect.api.validators.ValidationResult;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 
-import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
 
-@Data
-public class PluginsReport {
-    private String reportId;
-    private OffsetDateTime createdAt;
-    private String serverVersion;
-    private String spigotVersion;
-    private String spigotTesterVersion;
-    private List<TestReport> plugins = new ArrayList<TestReport>();
+public class ClassValidationFormatter
+{
+    private ClassValidationException exception;
+
+    public ClassValidationFormatter(ClassValidationException exception) {
+        this.exception = exception;
+    }
+
+
+
+    public void show() {
+        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + exception.getMessage());
+        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Looking for class: " + exception.getModel().getName());
+        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Version "+exception.getVersion());
+    }
 }

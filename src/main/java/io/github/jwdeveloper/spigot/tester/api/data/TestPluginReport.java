@@ -22,22 +22,19 @@
  * SOFTWARE.
  */
 
-package io.github.jwdeveloper.spigot.exampleplugintotest;
+package io.github.jwdeveloper.spigot.tester.api.data;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.plugin.java.JavaPlugin;
+import lombok.Data;
 
-public final class Main extends JavaPlugin {
+import java.util.List;
 
-    @Override
-    public void onEnable() {
-        // Plugin startup logic
-        Bukkit.getConsoleSender().sendMessage(ChatColor.RED+"STARTED TEST SUBJECT");
-    }
+@Data
+public class TestPluginReport {
+    private boolean isPassed = true;
 
-    @Override
-    public void onDisable() {
-        // Plugin shutdown logic
-    }
+    private String pluginVersion;
+
+    private String pluginName;
+
+    private List<TestClassResult> classResults;
 }

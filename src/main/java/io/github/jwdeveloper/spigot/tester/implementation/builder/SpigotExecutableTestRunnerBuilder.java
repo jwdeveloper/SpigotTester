@@ -25,10 +25,12 @@
 package io.github.jwdeveloper.spigot.tester.implementation.builder;
 
 
+import io.github.jwdeveloper.spigot.tester.api.SpigotTesterSetup;
 import io.github.jwdeveloper.spigot.tester.api.builder.ExecutableTestRunnerBuilder;
 import io.github.jwdeveloper.spigot.tester.api.data.TestClassResult;
 import io.github.jwdeveloper.spigot.tester.api.data.TestOptions;
-import io.github.jwdeveloper.spigot.tester.api.data.TestReport;
+import io.github.jwdeveloper.spigot.tester.api.data.TestPluginReport;
+import io.github.jwdeveloper.spigot.tester.implementation.players.NmsCommunicator;
 import org.bukkit.plugin.Plugin;
 
 import java.util.function.Consumer;
@@ -38,12 +40,17 @@ public class SpigotExecutableTestRunnerBuilder implements ExecutableTestRunnerBu
     private final SpigotTestRunnerBuilder builder;
     private Consumer<Exception> onException = (e) -> {};
 
-    public SpigotExecutableTestRunnerBuilder(Plugin plugin, TestOptions options) {
-        builder = new SpigotTestRunnerBuilder(plugin, options);
+    public SpigotExecutableTestRunnerBuilder(Plugin plugin, TestOptions options, NmsCommunicator nmsCommunicator) {
+        builder = new SpigotTestRunnerBuilder(plugin, options, nmsCommunicator);
+        if(plugin instanceof SpigotTesterSetup)
+        {
+            var setup = (SpigotTesterSetup)plugin;
+            setup.onSpigotTesterSetup(this);
+        }
     }
 
     @Override
-    public TestReport run() {
+    public TestPluginReport run() {
         var runner = builder.build();
         try {
             return runner.run();
@@ -59,7 +66,7 @@ public class SpigotExecutableTestRunnerBuilder implements ExecutableTestRunnerBu
         return this;
     }
     @Override
-    public ExecutableTestRunnerBuilder onFinish(Consumer<TestReport> event) {
+    public ExecutableTestRunnerBuilder onFinish(Consumer<TestPluginReport> event) {
         builder.onFinish(event);
         return this;
     }
@@ -71,20 +78,20 @@ public class SpigotExecutableTestRunnerBuilder implements ExecutableTestRunnerBu
     }
 
     @Override
-    public ExecutableTestRunnerBuilder withParameterProvider(Function<Class<?>, Object> provider) {
-        builder.withParameterProvider(provider);
+    public ExecutableTestRunnerBuilder parameterProvider(Function<Class<?>, Object> provider) {
+        builder.parameterProvider(provider);
         return this;
     }
 
     @Override
-    public ExecutableTestRunnerBuilder withParameter(Object parameter) {
-        builder.withParameter(parameter);
+    public ExecutableTestRunnerBuilder injectParameter(Object parameter) {
+        builder.injectParameter(parameter);
         return this;
     }
 
     @Override
-    public <T> ExecutableTestRunnerBuilder withParameter(T parameter, Class<T> type) {
-        builder.withParameter(parameter, type);
+    public <T> ExecutableTestRunnerBuilder injectParameter(T parameter, Class<T> type) {
+        builder.injectParameter(parameter, type);
         return this;
     }
 

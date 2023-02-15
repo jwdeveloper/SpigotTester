@@ -1,5 +1,5 @@
 name: ExamplePluginToTest
 version: '${project.version}'
-main: io.github.jwdeveloper.spigot.exampleplugintotest.Main
+main: io.github.jwdeveloper.spigot.exampleplugintotest.PluginMain
 api-version: 1.16
 softdepend: [SpigotTester]

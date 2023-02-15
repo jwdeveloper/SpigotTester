@@ -27,14 +27,12 @@ package io.github.jwdeveloper.spigot.tester;
 import io.github.jwdeveloper.spigot.tester.api.builder.ExecutableTestRunnerBuilder;
 import io.github.jwdeveloper.spigot.tester.api.data.TestOptions;
 import io.github.jwdeveloper.spigot.tester.implementation.builder.SpigotExecutableTestRunnerBuilder;
+import io.github.jwdeveloper.spigot.tester.implementation.players.NmsCommunicator;
 import org.bukkit.plugin.Plugin;
 
 public class SpigotTesterAPI {
-    public static ExecutableTestRunnerBuilder create(Plugin plugin) {
-        return new SpigotExecutableTestRunnerBuilder(plugin, new TestOptions());
-    }
 
-    public static ExecutableTestRunnerBuilder create(Plugin plugin, TestOptions options) {
-        return new SpigotExecutableTestRunnerBuilder(plugin, options);
+    public static ExecutableTestRunnerBuilder create(Plugin plugin, TestOptions options, NmsCommunicator nmsCommunicator) {
+        return new SpigotExecutableTestRunnerBuilder(plugin, options, nmsCommunicator);
     }
 }

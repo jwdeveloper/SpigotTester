@@ -22,21 +22,12 @@
  * SOFTWARE.
  */
 
-package io.github.jwdeveloper.spigot.tester.implementation.gson.adapters;
+import io.github.jwdeveloper.reflect.implementation.FluentReflect;
+import net.minecraft.server.level.EntityPlayer;
+import org.bukkit.craftbukkit.v1_17_R1.CraftServer;
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
 
-import com.google.gson.*;
+public class Dupa {
 
-import java.lang.reflect.Type;
 
-public class ExceptionAdapter implements JsonSerializer<Exception>, JsonDeserializer<Exception> {
-    @Override
-    public Exception deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        return new Exception("Exception could not be loaded from file");
-    }
-
-    @Override
-    public JsonElement serialize(Exception src, Type typeOfSrc, JsonSerializationContext context) {
-        final JsonObject obj = new JsonObject();
-        return obj;
-    }
 }

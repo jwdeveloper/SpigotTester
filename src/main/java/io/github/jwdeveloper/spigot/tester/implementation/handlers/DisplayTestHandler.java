@@ -109,7 +109,7 @@ public class DisplayTestHandler {
         return bracketsColor + "[" + textColor + text + bracketsColor + "]" + ChatColor.RESET;
     }
 
-    private String showErrorInfo(Exception exception) {
+    private String showErrorInfo(Throwable exception) {
         var stackTrace = new MessageBuilder();
         if (exception == null) {
             return "";
@@ -126,7 +126,7 @@ public class DisplayTestHandler {
         return stackTrace.send();
     }
 
-    private String showStackTrace(Exception exception) {
+    private String showStackTrace(Throwable exception) {
 
         if (exception == null) {
             return "";
