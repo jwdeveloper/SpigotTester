@@ -80,7 +80,7 @@ public class TestClassModelFactory {
 
     private List<TestMethodModel> getTestMethods(Class<?> clazz) {
         var result = new ArrayList<TestMethodModel>();
-        var methods = Arrays.stream(clazz.getDeclaredMethods())
+        var methods = Arrays.stream(clazz.getMethods())
                 .filter(c -> c.isAnnotationPresent(Test.class))
                 .toArray(Method[]::new);
 
