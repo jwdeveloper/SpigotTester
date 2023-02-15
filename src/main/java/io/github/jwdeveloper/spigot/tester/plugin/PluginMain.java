@@ -40,6 +40,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.lang.reflect.InvocationTargetException;
 import java.time.OffsetDateTime;
 import java.util.*;
 import java.util.function.Consumer;
@@ -102,7 +103,7 @@ public class PluginMain extends JavaPlugin {
             return Optional.of(nmsCommunicator);
         } catch (ValidationException e) {
             ValidationExceptionDisplay.showError(e);
-        } catch (IllegalAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return Optional.empty();

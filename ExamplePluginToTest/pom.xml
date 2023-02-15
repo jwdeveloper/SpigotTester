@@ -107,7 +107,7 @@
         <dependency>
             <groupId>io.github.jwdeveloper.spigot.tester</groupId>
             <artifactId>spigot-tester</artifactId>
-            <version>0.3.2</version>
+            <version>0.2.13-Release</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
