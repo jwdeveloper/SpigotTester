@@ -6,7 +6,31 @@ It is Plugin-Library for Spigot plugins integration testing. This library is cre
 behave simillar Junit so you can find a lot of common things. In order to use it
 every Test's class from your plugin should implement interface `SpigotTest`
 
-Example
+Example Plugin main
+``` java
+public final class PluginMain extends JavaPlugin implements SpigotTesterSetup {
+
+    //Example class that is passed to tests as parameter
+    private CraftingManager craftingManager;
+
+    @Override
+    public void onEnable() {
+        // Plugin startup logic
+        craftingManager = new CraftingManager();
+    }
+
+   //Here you can configure tests and inject parameters
+    @Override
+    public void onSpigotTesterSetup(TestRunnerBuilder builder) {
+        builder.injectParameter(craftingManager);
+    }
+}
+
+
+```
+
+
+Example Test
 ```java 
 import io.spigot.MyPlugin;
 import io.github.jwdeveloper.spigot.tester.api.SpigotTest;
@@ -16,39 +40,27 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-public class ServerTest implements SpigotTest {
-    private final Plugin plugin;
-    
-    //this is optional plugin will be automatically injected to constructor
-    public ServerTest(Plugin plugin) {
-        this.plugin = plugin;
-    }
+public class ExampleTests extends SpigotTest {
 
-    @Override
-    public void beforeAll() {
-        if (Bukkit.getPlayer("mike") == null) {
-            throw new RuntimeException("Players are required for this test");
-        }
-    }
-
-    @Test(name = "Give player Diamond")
-    public void playerShouldRecieveItem() {
-        //arrange
-        var player = Bukkit.getPlayer("mike");
-        var item = new ItemStack(Material.DIAMOND,1);
-
-        //act
-        player.getInventory().setItemInOffHand(item);
-
-        //assert
-        SpigotAssertion.shouldBeEqual(Material.DIAMOND, player.getInventory().getItemInMainHand().getType());
-        SpigotAssertion.shouldBeEqual(1, player.getInventory().getItemInMainHand().getAmount());
+    public ExampleTests(TestContext testContext) {
+        super(testContext);
     }
 
 
-    @Test(ignore = true)
-    public void someLegacyStuff() {
+    @Test(name = "crafting permission test")
+    public void shouldUseCrafting() {
+        //Arrange
+        Player player = addPlayer();
+        CraftingManager craftingManager = getParameter(CraftingManager.class);
+        
+        PermissionAttachment attachment = player.addAttachment(getPlugin());
+        attachment.setPermission("crating", true);
 
+        //Act
+        boolean result = craftingManager.canPlayerUseCrating(player);
+
+        //Assert
+        assertion(result).shouldBeTrue();
     }
 }
 ```
