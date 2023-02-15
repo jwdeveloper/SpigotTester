@@ -1,4 +1,6 @@
 # SpigotTester
+[![Release](https://jitpack.io/v/jwdeveloper/SpigotTester.svg)](https://jitpack.io/jwdeveloper/SpigotTester)
+
 
 [Download latest version](https://github.com/jwdeveloper/SpigotTester/releases/latest)
 
