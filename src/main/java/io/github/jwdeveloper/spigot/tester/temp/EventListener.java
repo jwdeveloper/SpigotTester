@@ -36,7 +36,7 @@ public class EventListener implements Listener
 
     public EventListener()
     {
-        Bukkit.getConsoleSender().sendMessage(ChatColor.BLUE+"BLUE MESSAGES ARE TEMPORARY FRO DEBUG REASON");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.BLUE+"BLUE MESSAGES ARE TEMPORARY FOR DEBUG REASON");
     }
 
 
