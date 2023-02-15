@@ -1,6 +1,6 @@
 # SpigotTester
 
-[Download latest version](https://github.com/jwdeveloper/SpigotTester/releases/download/0.3.0/plugin-tester.jar)
+[Download latest version](https://github.com/jwdeveloper/SpigotTester/releases/latest)
 
 It is Plugin-Library for Spigot plugins integration testing. This library is created to 
 behave simillar Junit so you can find a lot of common things. In order to use it
