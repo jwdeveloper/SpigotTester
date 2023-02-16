@@ -77,7 +77,7 @@ public class ExampleTests extends SpigotTest {
 
         //Assert
         assertThatEvent(PlayerTeleportEvent.class)
-                .wasInvoked(Times.exact(1))
+                .wasInvoked(Times.exact(2))
                 .validate();
 
         assertThatPlayer(player)
