@@ -4,11 +4,13 @@
 
 [Download latest version](https://github.com/jwdeveloper/SpigotTester/releases/latest)
 
-It is Plugin-Library for Spigot plugins integration testing. This library is created to 
-behave simillar Junit so you can find a lot of common things. In order to use it
-every Test's class from your plugin should implement interface `SpigotTest`
+This is a tool designed for adding integration tests to spigot plugins. This library is created to 
+behave simillar to Junit so you will find a lot similarities. In order to use it
+every class from your plugin which contains a test should extend the abstract class `SpigotTest`
 
-Example Plugin main
+# Examples 
+
+## Example Plugin main 
 ``` java
 public final class PluginMain extends JavaPlugin implements SpigotTesterSetup {
 
@@ -32,7 +34,7 @@ public final class PluginMain extends JavaPlugin implements SpigotTesterSetup {
 ```
 
 
-Example Test
+## Example Test
 ```java 
 import io.spigot.MyPlugin;
 import io.github.jwdeveloper.spigot.tester.api.SpigotTest;
@@ -67,10 +69,8 @@ public class ExampleTests extends SpigotTest {
 }
 ```
 
-To perform tests put SpigotTester and your plugin to `server/plugins` folder.
-Run server, when server will be loaded SpigotTester perform all tests and generate report `server/plugins/SpigotTester/report.json`  
-After that server will be automatically shut down.
-
+To perform tests, put the SpigotTester plugin and your plugin in the `server/plugins` folder.
+Then, run the server. Once the server has finished starting up, SpigotTester will perform all tests and generate a report in the location `server/plugins/SpigotTester/report.json`.
 
 
 For more flexibility you can modify some behaviors of SpigotTester in config `server/plugins/SpigotTester/config.yml` 
