@@ -46,25 +46,43 @@ import org.bukkit.inventory.ItemStack;
 
 public class ExampleTests extends SpigotTest {
 
-    public ExampleTests(TestContext testContext) {
-        super(testContext);
-    }
-
-
-    @Test(name = "crafting permission test")
+     @Test(name = "crafting permission test")
     public void shouldUseCrafting() {
         //Arrange
-        Player player = addPlayer();
+        Player player = addPlayer("mike");
         CraftingManager craftingManager = getParameter(CraftingManager.class);
-        
         PermissionAttachment attachment = player.addAttachment(getPlugin());
         attachment.setPermission("crating", true);
-
         //Act
         boolean result = craftingManager.canPlayerUseCrating(player);
 
         //Assert
-        assertion(result).shouldBeTrue();
+        assertThat(result).shouldBeTrue();
+
+        assertThatPlayer(player)
+                .hasName("mike")
+                .hasPermission("crating");
+    }
+
+
+    @Test(name = "teleportation test")
+    public void shouldBeTeleported() {
+        //Arrange
+        Player player = addPlayer("mike");
+
+        //Act
+        player.setOp(true);
+        player.performCommand("teleport "+player.getName()+" 1 100 2");
+        player.performCommand("teleport "+player.getName()+" 1 102 2");
+
+        //Assert
+        assertThatEvent(PlayerTeleportEvent.class)
+                .wasInvoked(Times.exact(1))
+                .validate();
+
+        assertThatPlayer(player)
+                .hasName("mike")
+                .hasOp();
     }
 }
 ```
