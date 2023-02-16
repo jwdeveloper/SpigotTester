@@ -25,13 +25,9 @@
 package io.github.jwdeveloper.spigot.exampleplugintotest;
 
 import io.github.jwdeveloper.spigot.tester.api.SpigotTesterSetup;
+import io.github.jwdeveloper.spigot.tester.api.builder.ExecutableTestRunnerBuilder;
 import io.github.jwdeveloper.spigot.tester.api.builder.TestRunnerBuilder;
-import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
 public final class PluginMain extends JavaPlugin implements SpigotTesterSetup {
 
@@ -43,9 +39,10 @@ public final class PluginMain extends JavaPlugin implements SpigotTesterSetup {
         craftingManager = new CraftingManager();
     }
 
-    @Override
-    public void onSpigotTesterSetup(TestRunnerBuilder builder) {
-        builder.injectParameter(craftingManager);
-    }
 
+    @Override
+    public void onSpigotTesterSetup(TestRunnerBuilder<ExecutableTestRunnerBuilder> builder)
+    {
+         builder.addParameter(craftingManager);
+    }
 }

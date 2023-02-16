@@ -28,29 +28,40 @@ import io.github.jwdeveloper.spigot.tester.api.TestContext;
 import io.github.jwdeveloper.spigot.tester.api.assertions.Assertions;
 import io.github.jwdeveloper.spigot.tester.api.players.PlayerFactory;
 import io.github.jwdeveloper.spigot.tester.implementation.players.FakePlayerFactoryImpl;
+import org.bukkit.event.Event;
 import org.bukkit.plugin.Plugin;
 
+import java.util.List;
 import java.util.function.Function;
 
-public class TestContextImpl implements TestContext {
+public class SpigotTestContext implements TestContext {
 
     private final Plugin plugin;
     private final FakePlayerFactoryImpl playerFactory;
     private final Function<Class<?>, Object> parameterProvider;
+    private final SpigotEventCollector spigotEventCollector;
 
-    public TestContextImpl(Plugin plugin, PlayerFactory playerFactory, Function<Class<?>, Object> parameterProvider) {
+    public SpigotTestContext(Plugin plugin,
+                             FakePlayerFactoryImpl playerFactory,
+                             Function<Class<?>, Object> parameterProvider,
+                             SpigotEventCollector spigotEventCollector) {
         this.plugin = plugin;
-        this.playerFactory = (FakePlayerFactoryImpl)playerFactory;
+        this.playerFactory = playerFactory;
         this.parameterProvider = parameterProvider;
+        this.spigotEventCollector = spigotEventCollector;
     }
 
-    public <T> T getParameter(Class<T> tClass)
-    {
-       return (T)parameterProvider.apply(tClass);
+    public <T> T getParameter(Class<T> tClass) {
+        return (T) parameterProvider.apply(tClass);
     }
 
     @Override
-    public PlayerFactory playerFactory() {
+    public List<Event> getInvokedEvents() {
+        return spigotEventCollector.getEvents();
+    }
+
+    @Override
+    public PlayerFactory getPlayerContext() {
         return playerFactory;
     }
 
@@ -65,14 +76,12 @@ public class TestContextImpl implements TestContext {
     }
 
 
-    public void start()
-    {
-
-
+    public void start() {
+        spigotEventCollector.startCollectingEvents();
     }
 
-    public void stop()
-    {
+    public void stop() {
         playerFactory.clear();
+        spigotEventCollector.stopCollectingEvents();
     }
 }

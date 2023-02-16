@@ -25,24 +25,23 @@
 package io.github.jwdeveloper.spigot.tester.implementation.builder;
 
 
-import io.github.jwdeveloper.reflect.implementation.FluentReflect;
 import io.github.jwdeveloper.spigot.tester.api.TestContext;
 import io.github.jwdeveloper.spigot.tester.api.TestRunner;
 import io.github.jwdeveloper.spigot.tester.api.builder.TestRunnerBuilder;
 import io.github.jwdeveloper.spigot.tester.api.data.TestClassResult;
 import io.github.jwdeveloper.spigot.tester.api.data.TestOptions;
 import io.github.jwdeveloper.spigot.tester.api.data.TestPluginReport;
-import io.github.jwdeveloper.spigot.tester.implementation.EventsHandler;
 import io.github.jwdeveloper.spigot.tester.implementation.JarScanner;
+import io.github.jwdeveloper.spigot.tester.implementation.SpigotEventCollector;
+import io.github.jwdeveloper.spigot.tester.implementation.SpigotTestContext;
 import io.github.jwdeveloper.spigot.tester.implementation.SpigotTestRunner;
-import io.github.jwdeveloper.spigot.tester.implementation.TestContextImpl;
 import io.github.jwdeveloper.spigot.tester.implementation.factory.TestClassModelFactory;
 import io.github.jwdeveloper.spigot.tester.implementation.gson.JsonUtility;
 import io.github.jwdeveloper.spigot.tester.implementation.handlers.DisplayTestHandler;
+import io.github.jwdeveloper.spigot.tester.implementation.handlers.EventsHandler;
 import io.github.jwdeveloper.spigot.tester.implementation.handlers.ReportGeneratorHandler;
 import io.github.jwdeveloper.spigot.tester.implementation.players.FakePlayerFactoryImpl;
 import io.github.jwdeveloper.spigot.tester.implementation.players.NmsCommunicator;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
 import java.io.InvalidClassException;
@@ -90,13 +89,13 @@ public class SpigotTestRunnerBuilder implements TestRunnerBuilder<SpigotTestRunn
     }
 
     @Override
-    public SpigotTestRunnerBuilder injectParameter(Object parameter) {
+    public SpigotTestRunnerBuilder addParameter(Object parameter) {
         parameters.put(parameter.getClass(), parameter);
         return this;
     }
 
     @Override
-    public <T> SpigotTestRunnerBuilder injectParameter(T parameter, Class<T> type) {
+    public <T> SpigotTestRunnerBuilder addParameter(T parameter, Class<T> type) {
 
         if (!parameter.getClass().isAssignableFrom(type)) {
             new InvalidClassException(parameter.getClass().getSimpleName() + "isAssignableFrom " + type.getSimpleName());
@@ -120,8 +119,9 @@ public class SpigotTestRunnerBuilder implements TestRunnerBuilder<SpigotTestRunn
                 options,
                 plugin);
 
+        var spigotEventCollector = new SpigotEventCollector(plugin);
         var playerFactory = new FakePlayerFactoryImpl(nmsCommunicator);
-        var testContext = new TestContextImpl(plugin, playerFactory, parameterProvider);
+        var testContext = new SpigotTestContext(plugin, playerFactory, parameterProvider, spigotEventCollector);
         parameters.put(TestContext.class, testContext);
 
         var factory = new TestClassModelFactory(parameterProvider);

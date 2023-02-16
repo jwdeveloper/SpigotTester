@@ -26,7 +26,6 @@ package io.github.jwdeveloper.spigot.tester.implementation.players;
 
 
 import io.github.jwdeveloper.spigot.tester.api.players.PlayerFactory;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -49,23 +48,21 @@ public class FakePlayerFactoryImpl implements PlayerFactory {
         }
     }
 
-    @Override
-    public Player createPlayer() {
-        return createPlayer(UUID.randomUUID());
-    }
-    public Player createPlayer(UUID uuid) {
-        return createPlayer(uuid, uuid.toString());
-    }
+
     public Player createPlayer(UUID uuid, String name) {
         try {
             var fakePlayer = nmsCommunicator.createFakePlayer(uuid, name);
             players.put(uuid, fakePlayer);
             fakePlayer.connect();
             return fakePlayer.getPlayer();
-        } catch (Exception e) {
-            Bukkit.getConsoleSender().sendMessage("Unable to create Fake Player, this version of spigot may not be supported");
-            e.printStackTrace();
-            return null;
+        } catch (Exception e)
+        {
+            throw new RuntimeException("Unable to create Fake Player, this version of spigot may not be supported", e);
         }
+    }
+
+    @Override
+    public int getAmount() {
+        return players.values().size();
     }
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c)  2023. jwdeveloper
+ * Copyright (c)  $originalComment.match("Copyright \(c\) (\d+)", 1, "-", "$today.year")2023. jwdeveloper
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,21 +22,47 @@
  * SOFTWARE.
  */
 
-package io.github.jwdeveloper.spigot.tester.api;
+package io.github.jwdeveloper.spigot.tester.api.assertions;
+
+import org.bukkit.event.Event;
+
+import java.util.function.Function;
+
+public class EventsAssertions {
+
+    private Class<? extends Event> event;
+
+    public EventsAssertions(Class<? extends Event> event) {
+        this.event = event;
+    }
+
+    public EventsAssertions wasInvoked() {
+        return this;
+    }
+    public EventsAssertions wasInvoked(int howOften) {
+        return this;
+    }
+    public EventsAssertions getEvent(int index) {
+        return this;
+    }
+
+    public EventsAssertions getFirstEvent() {
+        return this;
+    }
+
+    public EventsAssertions getLastEvent() {
+        return this;
+    }
+
+    public EventsAssertions validate(Function<Event,Boolean> validation)
+    {
+        return this;
+    }
 
 
-import io.github.jwdeveloper.spigot.tester.api.data.TestPluginReport;
+    public EventsAssertions wasCanceled()
+    {
+        return this;
+    }
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.concurrent.ExecutionException;
-
-
-public interface TestRunner
-{
-    TestPluginReport run() throws
-            InvocationTargetException,
-            InstantiationException,
-            IllegalAccessException,
-            ExecutionException,
-            InterruptedException;
 }

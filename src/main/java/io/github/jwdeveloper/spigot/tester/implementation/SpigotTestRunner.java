@@ -26,8 +26,6 @@ package io.github.jwdeveloper.spigot.tester.implementation;
 
 
 import io.github.jwdeveloper.spigot.tester.api.SpigotTest;
-import io.github.jwdeveloper.spigot.tester.api.TestContext;
-import io.github.jwdeveloper.spigot.tester.api.players.PlayerFactory;
 import io.github.jwdeveloper.spigot.tester.api.TestRunner;
 import io.github.jwdeveloper.spigot.tester.api.data.TestClassResult;
 import io.github.jwdeveloper.spigot.tester.api.data.TestMethodResult;
@@ -36,8 +34,9 @@ import io.github.jwdeveloper.spigot.tester.api.data.TestPluginReport;
 import io.github.jwdeveloper.spigot.tester.api.models.TestClassModel;
 import io.github.jwdeveloper.spigot.tester.api.models.TestMethodModel;
 import io.github.jwdeveloper.spigot.tester.implementation.factory.TestClassModelFactory;
-import io.github.jwdeveloper.spigot.tester.implementation.players.FakePlayerFactoryImpl;
-import io.github.jwdeveloper.spigot.tester.implementation.players.NmsCommunicator;
+import io.github.jwdeveloper.spigot.tester.implementation.handlers.EventsHandler;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.InvocationTargetException;
@@ -46,43 +45,44 @@ import java.util.concurrent.ExecutionException;
 
 public class SpigotTestRunner implements TestRunner {
     private final TestClassModelFactory factory;
-    private final JarScanner assemblyScanner;
+    private final JarScanner jarScanner;
     private final TestOptions options;
     private final Plugin plugin;
     private final EventsHandler eventsHandler;
-    private final TestContextImpl testContext;
+    private final SpigotTestContext testContext;
 
     public SpigotTestRunner(Plugin plugin,
                             TestClassModelFactory factory,
                             JarScanner assemblyScanner,
                             TestOptions options,
                             EventsHandler eventsHandler,
-                            TestContextImpl testContext) {
+                            SpigotTestContext testContext) {
         this.plugin = plugin;
         this.factory = factory;
         this.options = options;
-        this.assemblyScanner = assemblyScanner;
+        this.jarScanner = assemblyScanner;
         this.eventsHandler = eventsHandler;
         this.testContext = testContext;
     }
 
     @Override
-    public TestPluginReport run() throws InvocationTargetException, InstantiationException, IllegalAccessException, ExecutionException, InterruptedException {
-        var classes = assemblyScanner.findBySuperClass(SpigotTest.class);
+    public TestPluginReport run() throws InvocationTargetException,InstantiationException, IllegalAccessException, ExecutionException, InterruptedException
+    {
+        var classes = jarScanner.findBySuperClass(SpigotTest.class);
         var testClasses = factory.createTestModels(classes);
-        var report = new TestPluginReport();
         var classResults = new ArrayList<TestClassResult>();
         for (var testClass : testClasses) {
+
             testContext.start();
             var classResult = performClassTest(testClass);
             testContext.stop();
             eventsHandler.invokeOnTest(classResult);
             classResults.add(classResult);
         }
+        var report = new TestPluginReport();
         report.setPluginName(plugin.getName());
         report.setPluginVersion(plugin.getDescription().getVersion());
         report.setClassResults(classResults);
-
         for(var tests : report.getClassResults())
         {
             if(!tests.isPassed())
@@ -91,78 +91,136 @@ public class SpigotTestRunner implements TestRunner {
                 break;
             }
         }
-
         eventsHandler.invokeOnFinish(report);
         return report;
     }
 
 
-    public TestClassResult performClassTest(TestClassModel model) {
+    public TestClassResult performClassTest(TestClassModel classModel) {
+        var classResult = new TestClassResult();
+        classResult.setPassed(true);
+        classResult.setClassName(classModel.getName());
+        classResult.setClassPackage(classModel.getPackageName());
+        classResult.setTestMethods(new ArrayList<TestMethodResult>());
 
-        var result = new TestClassResult();
-        result.setPassed(true);
-        result.setClassName(model.getName());
-        result.setClassPackage(model.getPackageName());
-        try {
-            model.getSpigotTest().before();
-        } catch (Exception e) {
-            result.setPassed(false);
-            eventsHandler.invokeOnTest(result);
-            return result;
+        var beforeResult = performBefore(classModel);
+        if(!beforeResult.isPassed())
+        {
+            classResult.setPassed(false);
+            classResult.getTestMethods().add(beforeResult.getFailInfo());
+            return classResult;
         }
-        var methods = new ArrayList<TestMethodResult>();
-        for (var testMethod : model.getTestMethods()) {
-            var methodResult = performMethodTest(testMethod, model.getSpigotTest());
+
+
+        for (var testMethod : classModel.getTestMethods()) {
+            var methodResult = performMethodTest(testMethod, classModel.getSpigotTest());
             if (!methodResult.isPassed()) {
-                result.setPassed(false);
+                classResult.setPassed(false);
             }
-            methods.add(methodResult);
+            classResult.getTestMethods().add(methodResult);
         }
-        try {
-            model.getSpigotTest().after();
-        } catch (Exception e) {
-            eventsHandler.invokeOnTest(result);
-            result.setPassed(false);
-            return result;
-        }
-        result.setTestMethods(methods);
 
-        return result;
+        var afterResult = performAfter(classModel);
+        if(!afterResult.isPassed())
+        {
+            classResult.setPassed(false);
+            classResult.getTestMethods().add(afterResult.getFailInfo());
+            return classResult;
+        }
+
+        return classResult;
     }
 
-    private TestMethodResult performMethodTest(TestMethodModel model, SpigotTest test) {
+    private TestMethodResult performMethodTest(TestMethodModel methodModel, SpigotTest spigotTest) {
 
-        var testMethod = new TestMethodResult();
-        testMethod.setName(model.getName());
-        testMethod.setIgnored(model.isIgnored());
-        if (model.isIgnored()) {
-            testMethod.setPassed(true);
-            return testMethod;
+        var methodResult = new TestMethodResult();
+        methodResult.setName(methodModel.getName());
+        methodResult.setIgnored(methodModel.isIgnored());
+        if (methodModel.isIgnored()) {
+            methodResult.setPassed(true);
+            return methodResult;
         }
 
         try {
             var start = System.nanoTime();
-            test.beforeEachTest();
-            model.getMethod().invoke(test);
-            test.afterEachTest();
-
+            testContext.start();
+            spigotTest.beforeEachTest();
+            methodModel.getMethod().invoke(spigotTest);
+            spigotTest.afterEachTest();
+            testContext.stop();
             var finish = System.nanoTime();
             var result = finish - start;
-            var executionTimeInMilis = result / Math.pow(10, 6);
-            testMethod.setExecutionTime(executionTimeInMilis);
-            testMethod.setPassed(true);
+            var executionTimeInMilisec = result / Math.pow(10, 6);
+            methodResult.setExecutionTime(executionTimeInMilisec);
+            methodResult.setPassed(true);
+            return methodResult;
         }
         catch (InvocationTargetException e)
         {
-            testMethod.setException(e.getCause());
-            testMethod.setErrorMessage(e.getMessage());
-            return testMethod;
+            methodResult.setException(e.getCause());
+            methodResult.setErrorMessage(e.getMessage());
+            methodResult.setPassed(false);
+            return methodResult;
         }
         catch (Exception e) {
-            testMethod.setException(e);
-            testMethod.setErrorMessage(e.getMessage());
-            return testMethod;
+            methodResult.setException(e);
+            methodResult.setErrorMessage(e.getMessage());
+            methodResult.setPassed(false);
+            return methodResult;
         }
-        return testMethod;
     }
+
+    public ResultDto performBefore(TestClassModel testClassModel)
+    {
+        try {
+            testClassModel.getSpigotTest().before();
+            if(testContext.getPlayerContext().getAmount() != 0)
+            {
+                TestMethodResult res = new TestMethodResult();
+                res.setPassed(false);
+                res.setErrorMessage("addPlayer() could not be called inside before() method, you can called it in beforeEachTest() or inside test");
+                res.setName(testClassModel.getName()+".before()");
+                return new ResultDto(false, null);
+            }
+
+            return new ResultDto(true, null);
+        }
+        catch (Exception e)
+        {
+            TestMethodResult res = new TestMethodResult();
+            res.setPassed(false);
+            res.setException(e);
+            res.setErrorMessage(e.getMessage());
+            res.setName(testClassModel.getName()+".before()");
+            return new ResultDto(false, null);
+        }
+    }
+
+    public ResultDto performAfter(TestClassModel testClassModel)
+    {
+        try {
+            testClassModel.getSpigotTest().after();
+            return new ResultDto(true, null);
+        }
+        catch (Exception e)
+        {
+            TestMethodResult res = new TestMethodResult();
+            res.setPassed(false);
+            res.setException(e);
+            res.setErrorMessage(e.getMessage());
+            res.setName(testClassModel.getName()+".after()");
+            return new ResultDto(false, null);
+        }
+    }
+
+
+    @Getter
+    @AllArgsConstructor
+    private class ResultDto
+    {
+        private boolean passed;
+        private TestMethodResult failInfo;
+    }
+
+
 }

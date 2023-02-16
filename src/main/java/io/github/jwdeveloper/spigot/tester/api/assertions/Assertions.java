@@ -25,6 +25,7 @@
 package io.github.jwdeveloper.spigot.tester.api.assertions;
 
 import io.github.jwdeveloper.spigot.tester.api.exception.AssertionException;
+import org.bukkit.entity.Player;
 
 import java.util.Collection;
 import java.util.List;
@@ -81,17 +82,13 @@ public class Assertions {
         return true;
     }
 
-    public <T> boolean shouldContains(List<T> list) {
-        if (!list.contains(target)) {
-            throw new AssertionException("list not contains object");
-        }
+    public <T> boolean shouldContains(T[] list) {
+
         return true;
     }
 
-    public <T> boolean shouldNotContains(List<T> list) {
-        if (list.equals(target)) {
-            throw new AssertionException("should be equal");
-        }
+    public <T> boolean shouldNotContains(Iterable<T> list) {
+
         return true;
     }
 

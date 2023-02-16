@@ -25,61 +25,80 @@
 package io.github.jwdeveloper.spigot.tester.api;
 
 import io.github.jwdeveloper.spigot.tester.api.assertions.Assertions;
+import io.github.jwdeveloper.spigot.tester.api.assertions.CommandAssertion;
+import io.github.jwdeveloper.spigot.tester.api.assertions.EventsAssertions;
+import io.github.jwdeveloper.spigot.tester.api.assertions.PlayerAssertions;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.plugin.Plugin;
 
 import java.util.UUID;
 
-public abstract class SpigotTest implements TestMember
-{
+public abstract class SpigotTest implements TestMember {
+
     private final TestContext testContext;
 
-    public SpigotTest(TestContext testContext)
-    {
+    public SpigotTest(TestContext testContext) {
         this.testContext = testContext;
     }
 
     @Override
-    public void beforeEachTest() {
-    }
-    @Override
-    public void before() {
-    }
+    public void before() { /* Method when class is loaded, can be override   */ }
 
     @Override
-    public void after() {
-    }
+    public void beforeEachTest() { /* Method called before each test, can be override  */ }
 
     @Override
-    public void afterEachTest() {
-    }
+    public void afterEachTest() { /* Method called after each test, can be override  */ }
 
-    protected final Assertions assertion(Object object)
-    {
+    @Override
+    public void after() { /* Method called when all tests have been performed, can be override  */ }
+
+
+    /* Assertion utilities  */
+    protected final Assertions assertThat(Object object) {
         return new Assertions(object);
     }
 
-    protected final Player addPlayer()
-    {
-        return testContext.playerFactory().createPlayer();
-    }
-    protected final Player addPlayer(String name)
-    {
-        return testContext.playerFactory().createPlayer(UUID.randomUUID(), name);
-    }
-    protected final Player addPlayer(UUID uuid, String name)
-    {
-        return testContext.playerFactory().createPlayer(uuid, name);
+    /* Assertion utilities  */
+    protected final PlayerAssertions assertThatPlayer(Player object) {
+        return new PlayerAssertions(object);
     }
 
-
-    protected final <T> T getParameter(Class<T> clazz)
-    {
-          return testContext.getParameter(clazz);
+    /* Assertion utilities  */
+    protected final EventsAssertions assertThatEvent(Class<? extends Event> eventClass) {
+        return new EventsAssertions(eventClass);
     }
 
-    protected final Plugin getPlugin()
+    /* Assertion utilities  */
+    protected final CommandAssertion assertThatCommand(String commandName)
     {
+        return new CommandAssertion(commandName);
+    }
+
+    /* Creates fake player  */
+    protected final Player addPlayer() {
+        var uuid = UUID.randomUUID();
+        return testContext.getPlayerContext().createPlayer(uuid, uuid.toString());
+    }
+
+    /* Creates fake player  */
+    protected final Player addPlayer(String name) {
+        return addPlayer(UUID.randomUUID(), name);
+    }
+
+    /* Creates fake player  */
+    protected final Player addPlayer(UUID uuid, String name) {
+        return testContext.getPlayerContext().createPlayer(uuid, name);
+    }
+
+    /* Get parameter that have been added in TestRunnerBuilder.addParameter() */
+    protected final <T> T getParameter(Class<T> clazz) {
+        return testContext.getParameter(clazz);
+    }
+
+    /* Current tested plugin instance */
+    protected final Plugin getPlugin() {
         return testContext.plugin();
     }
 

@@ -38,65 +38,78 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class TestClassModelFactory {
 
-    private final Function<Class<?>, Object> dependecyProvider;
+    private final Function<Class<?>, Object> parameterProvider;
 
     public TestClassModelFactory(Function<Class<?>, Object> parameterProvider) {
-        this.dependecyProvider = parameterProvider;
+        this.parameterProvider = parameterProvider;
     }
 
     public List<TestClassModel> createTestModels(Collection<Class<?>> testsClasses) throws InvocationTargetException, InstantiationException, IllegalAccessException {
-        var result = new ArrayList<TestClassModel>();
+        var classModels = new ArrayList<TestClassModel>();
         for (var clazz : testsClasses) {
             var constructors = clazz.getConstructors();
             if (constructors.length == 0) {
                 throw new IllegalArgumentException(clazz.getSimpleName() + " need to have one public constructor");
             }
             var instance = (SpigotTest) getSpigotTestInstance(constructors[0]);
-            var testMethod = getTestMethods(clazz);
+            var methodModels = getMethodModels(clazz);
 
-            var testModel = new TestClassModel();
-            testModel.setName(clazz.getSimpleName());
-            testModel.setPackageName(clazz.getPackageName());
-            testModel.setSpigotTest(instance);
-            testModel.setTestMethods(testMethod);
-            result.add(testModel);
+            var classModel = new TestClassModel();
+            classModel.setName(clazz.getSimpleName());
+            classModel.setPackageName(clazz.getPackageName());
+            classModel.setSpigotTest(instance);
+            classModel.setTestMethods(methodModels);
+            classModels.add(classModel);
         }
-        return result;
+        return classModels;
     }
 
 
     private SpigotTest getSpigotTestInstance(Constructor constructor) throws InvocationTargetException, InstantiationException, IllegalAccessException {
-        var constructorInput = new Object[constructor.getParameterCount()];
-        var currentParamIndex = 0;
+        var constructorArguments = new Object[constructor.getParameterCount()];
+        var argumentIndex = 0;
         for (var type : constructor.getParameterTypes()) {
-            constructorInput[currentParamIndex] = dependecyProvider.apply(type);
-            currentParamIndex++;
+            constructorArguments[argumentIndex] = parameterProvider.apply(type);
+            argumentIndex++;
         }
-        return (SpigotTest) constructor.newInstance(constructorInput);
+        return (SpigotTest) constructor.newInstance(constructorArguments);
     }
 
-    private List<TestMethodModel> getTestMethods(Class<?> clazz) {
-        var result = new ArrayList<TestMethodModel>();
-        var methods = Arrays.stream(clazz.getMethods())
-                .filter(c -> c.isAnnotationPresent(Test.class))
-                .toArray(Method[]::new);
-
+    private List<TestMethodModel> getMethodModels(Class<?> clazz) {
+        var methodModels = new ArrayList<TestMethodModel>();
+        var methods = getTestMethods(clazz);
 
         for (var method : methods) {
             var annotation = method.getAnnotation(Test.class);
-            var model = new TestMethodModel();
+            var methodModel = new TestMethodModel();
 
-            model.setIgnored(annotation.ignore());
-            model.setName(method.getName() + "()");
-            model.setMethod(method);
+            methodModel.setIgnored(annotation.ignore());
+            methodModel.setName(method.getName() + "()");
+            methodModel.setMethod(method);
             if (!annotation.name().equals("")) {
-                model.setName(annotation.name());
+                methodModel.setName(annotation.name());
             }
-            result.add(model);
+            methodModels.add(methodModel);
         }
-        return result;
+        return methodModels;
     }
+
+    private List<Method> getTestMethods(Class<?> root) {
+        var methods = new ArrayList<Method>();
+        Class<?> currentClass = root;
+        while (currentClass != null && currentClass != Object.class) {
+            var temp = Arrays.stream(currentClass.getDeclaredMethods())
+                    .filter(c -> c.isAnnotationPresent(Test.class))
+                    .collect(Collectors.toList());
+            
+            methods.addAll(temp);
+            currentClass = currentClass.getSuperclass();
+        }
+        return methods;
+    }
+
 }

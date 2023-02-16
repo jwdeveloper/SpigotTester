@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c)  2023. jwdeveloper
+ * Copyright (c)  $originalComment.match("Copyright \(c\) (\d+)", 1, "-", "$today.year")2023. jwdeveloper
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,21 +22,40 @@
  * SOFTWARE.
  */
 
-package io.github.jwdeveloper.spigot.tester.api;
+package io.github.jwdeveloper.spigot.tester.implementation.handlers;
 
-
+import io.github.jwdeveloper.spigot.tester.api.data.TestClassResult;
 import io.github.jwdeveloper.spigot.tester.api.data.TestPluginReport;
+import lombok.Data;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.concurrent.ExecutionException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
-
-public interface TestRunner
+@Data
+public class EventsHandler
 {
-    TestPluginReport run() throws
-            InvocationTargetException,
-            InstantiationException,
-            IllegalAccessException,
-            ExecutionException,
-            InterruptedException;
+
+    private List<Consumer<TestClassResult>> onTestEvent = new ArrayList<>();
+
+    private List<Consumer<TestPluginReport>> onTestFinished = new ArrayList<>();
+
+    public void onTest(Consumer<TestClassResult> event)
+    {
+        onTestEvent.add(event);
+    }
+
+    public void onFinish(Consumer<TestPluginReport> event)
+    {
+        onTestFinished.add(event);
+    }
+
+    public void invokeOnTest(TestClassResult event) {
+        onTestEvent.stream().forEach(e -> e.accept(event));
+    }
+
+    public void invokeOnFinish(TestPluginReport report) {
+        onTestFinished.stream().forEach(e -> e.accept(report));
+    }
+
 }

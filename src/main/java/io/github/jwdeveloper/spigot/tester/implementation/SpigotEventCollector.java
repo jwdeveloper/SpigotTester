@@ -24,41 +24,44 @@
 
 package io.github.jwdeveloper.spigot.tester.implementation;
 
-import io.github.jwdeveloper.spigot.tester.plugin.PluginMain;
-import org.bukkit.Bukkit;
-import org.bukkit.event.*;
+import org.bukkit.event.Event;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SpigotEventProxy implements Listener {
+public class SpigotEventCollector implements Listener {
     private final List<Event> events;
-    private RegisteredListener listener;
+    private final RegisteredListener listener;
 
-    public SpigotEventProxy() {
+    public SpigotEventCollector(Plugin plugin) {
         events = new ArrayList<>();
-        PluginMain.getPlugin(PluginMain.class).getServer().getPluginManager().registerEvents(this, PluginMain.getPlugin(PluginMain.class));
-        listener = new RegisteredListener(this, (listener, event) ->
-        {
-            events.add(event);
-        }, EventPriority.MONITOR, PluginMain.getPlugin(PluginMain.class), false);
+        listener = new RegisteredListener(this,
+                (listener, event) ->
+                {
+                    events.add(event);
+                },
+                EventPriority.MONITOR,
+                plugin,
+                false);
     }
 
-    public void startSession() {
-        stopSession();
+    public void startCollectingEvents() {
+        stopCollectingEvents();
         for (var handler : HandlerList.getHandlerLists()) {
             handler.register(listener);
         }
     }
 
     public List<Event> getEvents() {
-        var result = new ArrayList<Event>();
-        result.addAll(events);
-        return result;
+        return new ArrayList<Event>(events);
     }
 
-    public void stopSession() {
+    public void stopCollectingEvents() {
         for (var handler : HandlerList.getHandlerLists()) {
             handler.unregister(listener);
         }

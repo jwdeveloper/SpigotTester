@@ -38,5 +38,8 @@ public interface ExecutableTestRunnerBuilder extends TestRunnerBuilder<Executabl
      */
     TestPluginReport run();
 
+    /**
+     * Invoked when exception happen
+     */
     ExecutableTestRunnerBuilder onException(Consumer<Exception> event);
 }

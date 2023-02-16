@@ -84,14 +84,14 @@ public class SpigotExecutableTestRunnerBuilder implements ExecutableTestRunnerBu
     }
 
     @Override
-    public ExecutableTestRunnerBuilder injectParameter(Object parameter) {
-        builder.injectParameter(parameter);
+    public ExecutableTestRunnerBuilder addParameter(Object parameter) {
+        builder.addParameter(parameter);
         return this;
     }
 
     @Override
-    public <T> ExecutableTestRunnerBuilder injectParameter(T parameter, Class<T> type) {
-        builder.injectParameter(parameter, type);
+    public <T> ExecutableTestRunnerBuilder addParameter(T parameter, Class<T> type) {
+        builder.addParameter(parameter, type);
         return this;
     }
 

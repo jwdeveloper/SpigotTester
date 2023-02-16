@@ -24,7 +24,6 @@
 
 package io.github.jwdeveloper.spigot.tester.api.players;
 
-import io.github.jwdeveloper.spigot.tester.implementation.players.FakePlayer;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
@@ -34,8 +33,9 @@ import java.util.UUID;
  * fake players will be disconnected from the server
  * Fake players are not visible to user but indeed there are active for the server
  */
-public interface PlayerFactory {
-    Player createPlayer();
-    Player createPlayer(UUID uuid);
+public interface PlayerFactory
+{
     Player createPlayer(UUID uuid, String name);
+
+    int getAmount();
 }

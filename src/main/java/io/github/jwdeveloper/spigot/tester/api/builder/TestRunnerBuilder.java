@@ -25,7 +25,6 @@
 package io.github.jwdeveloper.spigot.tester.api.builder;
 
 
-
 import io.github.jwdeveloper.spigot.tester.api.data.TestClassResult;
 import io.github.jwdeveloper.spigot.tester.api.data.TestOptions;
 import io.github.jwdeveloper.spigot.tester.api.data.TestPluginReport;
@@ -35,29 +34,36 @@ import java.util.function.Function;
 
 public interface TestRunnerBuilder<SELF extends TestRunnerBuilder> {
 
+    /**
+     * Invoked when tests are done
+     */
     SELF onFinish(Consumer<TestPluginReport> event);
+
+    /**
+     * Invoked when after each test
+     */
     SELF onTest(Consumer<TestClassResult> event);
 
     /**
-     *  In case you need to use Dependency Injection container
+     * In case you need to use Dependency Injection container
      */
     SELF parameterProvider(Function<Class<?>, Object> provider);
 
 
     /**
-     *  Parameter that will be optionally passed to test class constructor
+     * Parameter that will be optionally passed to test class constructor
      */
-    SELF injectParameter(Object parameter);
+    SELF addParameter(Object parameter);
 
 
     /**
-     *  Parameter that will be optionally passed to test class constructor
+     * Parameter that will be optionally passed to test class constructor
      */
-    <T> SELF injectParameter(T parameter, Class<T> type);
+    <T> SELF addParameter(T parameter, Class<T> type);
 
 
     /**
-     *  Tests configuration
+     * Tests configuration
      */
     SELF configure(Consumer<TestOptions> options);
 }

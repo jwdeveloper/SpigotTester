@@ -26,18 +26,16 @@ package io.github.jwdeveloper.spigot.tester.implementation.handlers;
 
 import io.github.jwdeveloper.spigot.tester.api.data.TestClassResult;
 import io.github.jwdeveloper.spigot.tester.api.data.TestOptions;
-import io.github.jwdeveloper.spigot.tester.implementation.EventsHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 public class DisplayTestHandler {
-    private EventsHandler eventsHandler;
-    private TestOptions options;
+
+    private final TestOptions options;
 
     public DisplayTestHandler(EventsHandler eventsHandler, TestOptions options) {
-        this.eventsHandler = eventsHandler;
-        this.options = options;
         eventsHandler.onTest(this::onTest);
+        this.options = options;
     }
 
     public void onTest(TestClassResult test) {
@@ -151,7 +149,7 @@ public class DisplayTestHandler {
                     .append(" ")
                     .append(ChatColor.RESET);
 
-            stackTraces += stackTrace.send()+System.lineSeparator();
+            stackTraces += stackTrace.send() + System.lineSeparator();
         }
         new MessageBuilder().newLine().send();
         return stackTraces;
@@ -194,6 +192,4 @@ public class DisplayTestHandler {
             return value;
         }
     }
-
-
 }

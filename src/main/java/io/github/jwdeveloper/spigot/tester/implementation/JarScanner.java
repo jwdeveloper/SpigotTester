@@ -26,10 +26,12 @@ package io.github.jwdeveloper.spigot.tester.implementation;
 
 
 import lombok.Getter;
+import org.bukkit.Bukkit;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -37,34 +39,36 @@ import java.util.zip.ZipInputStream;
 public class JarScanner {
     @Getter
     private final List<Class<?>> classes;
-    private final Map<Class<?>, List<Class<?>>> byInterfaceCache;
 
-    private final Map<Class<?>, List<Class<?>>> byParentCache;
+    private final Map<Class<?>, List<Class<?>>> bySuperClassCache;
 
     public JarScanner(Class<?> clazz) {
         classes = loadPluginClasses(clazz);
-        byInterfaceCache = new IdentityHashMap<>();
-        byParentCache = new HashMap<>();
+        bySuperClassCache = new HashMap<>();
     }
 
 
     private static List<Class<?>> loadPluginClasses(final Class<?> clazz) {
         final var source = clazz.getProtectionDomain().getCodeSource();
-        if (source == null) return Collections.emptyList();
+        if (source == null)
+            return Collections.emptyList();
         final var url = source.getLocation();
         try (final var zip = new ZipInputStream(url.openStream())) {
             final List<Class<?>> classes = new ArrayList<>();
             ZipEntry entry;
             while ((entry = zip.getNextEntry()) != null) {
-                if (entry.isDirectory()) continue;
+                if (entry.isDirectory())
+                    continue;
                 var name = entry.getName();
-                if(name.startsWith("META-INF")) continue;
-                if (!name.endsWith(".class")) continue;
+                if (name.startsWith("META-INF"))
+                    continue;
+                if (!name.endsWith(".class"))
+                    continue;
                 name = name.replace('/', '.').substring(0, name.length() - 6);
                 try {
                     classes.add(Class.forName(name, false, clazz.getClassLoader()));
                 } catch (NoClassDefFoundError | ClassNotFoundException e) {
-                    System.out.println("Unable to load class:" + name);
+                    Bukkit.getConsoleSender().sendMessage("Unable to load class:" + name);
                 }
             }
             return classes;
@@ -74,21 +78,19 @@ public class JarScanner {
         }
     }
 
-    public Collection<Class<?>> findBySuperClass(Class<?> parentClass) {
-        if (byParentCache.containsKey(parentClass)) {
-            return byParentCache.get(parentClass);
+    public Collection<Class<?>> findBySuperClass(Class<?> superClass) {
+        if (bySuperClassCache.containsKey(superClass)) {
+            return bySuperClassCache.get(superClass);
         }
-        var result = new ArrayList<Class<?>>();
-        for (var _class : classes) {
-            if (isClassContainsType(_class, parentClass)) {
-                result.add(_class);
-            }
-        }
-        byParentCache.put(parentClass, result);
+        var result = classes.stream()
+                .filter(clazz -> isClassExtendType(clazz, superClass))
+                .collect(Collectors.toList());
+
+        bySuperClassCache.put(superClass, result);
         return result;
     }
 
-    private boolean isClassContainsType(Class<?> type, Class<?> searchType) {
+    private boolean isClassExtendType(Class<?> type, Class<?> searchType) {
         return searchType.isAssignableFrom(type) && !Modifier.isAbstract(type.getModifiers());
     }
 }

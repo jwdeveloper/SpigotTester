@@ -28,35 +28,54 @@ package io.github.jwdeveloper.spigot.exampleplugintotest;
 import io.github.jwdeveloper.spigot.tester.api.SpigotTest;
 import io.github.jwdeveloper.spigot.tester.api.TestContext;
 import io.github.jwdeveloper.spigot.tester.api.annotations.Test;
-import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.permissions.PermissionAttachment;
 
 public class ExampleTests extends SpigotTest {
 
+
     public ExampleTests(TestContext testContext) {
         super(testContext);
     }
 
-
     @Test(name = "crafting permission test")
     public void shouldUseCrafting() {
         //Arrange
-        Player player = addPlayer();
+        Player player = addPlayer("mike");
         CraftingManager craftingManager = getParameter(CraftingManager.class);
         PermissionAttachment attachment = player.addAttachment(getPlugin());
         attachment.setPermission("crating", true);
         player.setOp(true);
-        player.setGameMode(GameMode.CREATIVE);
-        player.setGlowing(true);
         player.chat("/teleport " + player.getName() + " 91 63 -4");
 
         //Act
         boolean result = craftingManager.canPlayerUseCrating(player);
 
         //Assert
-        assertion(result).shouldBeTrue();
+        assertThat(result).shouldBeTrue();
+
+        assertThatCommand("teleport")
+                .wasTriggered(2)
+                .getCommand(1)
+                .byPlayer(player)
+                .withArguments(player.getName(), "91", "63", "-4")
+                .withSuccess();
+
+        assertThatEvent(PlayerJoinEvent.class)
+                .wasInvoked(2)
+                .getFirstEvent()
+                .validate(event ->
+                {
+                   return false;
+                })
+                .getLastEvent()
+                .wasCanceled();
+
+        assertThatPlayer(player)
+                .hasName("mike")
+                .hasPermission("crating")
+                .hasOp();
     }
 
 

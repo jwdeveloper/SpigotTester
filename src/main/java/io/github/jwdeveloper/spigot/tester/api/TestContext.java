@@ -26,15 +26,20 @@ package io.github.jwdeveloper.spigot.tester.api;
 
 import io.github.jwdeveloper.spigot.tester.api.assertions.Assertions;
 import io.github.jwdeveloper.spigot.tester.api.players.PlayerFactory;
+import org.bukkit.event.Event;
 import org.bukkit.plugin.Plugin;
+
+import java.util.List;
 
 public interface TestContext
 {
-     PlayerFactory playerFactory();
+     PlayerFactory getPlayerContext();
 
      Assertions assertions(Object target);
 
      Plugin plugin();
 
      <T> T getParameter(Class<T> clazz);
+
+     List<Event> getInvokedEvents();
 }

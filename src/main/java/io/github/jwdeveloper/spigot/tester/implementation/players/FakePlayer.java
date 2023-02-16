@@ -25,7 +25,6 @@
 package io.github.jwdeveloper.spigot.tester.implementation.players;
 
 import lombok.Getter;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class FakePlayer {
@@ -41,20 +40,23 @@ public class FakePlayer {
     }
 
     public void connect() {
-        try
-        {
+        try {
             communicator.connect(handle);
         }
         catch (Exception e)
         {
-            Bukkit.getConsoleSender().sendMessage("UNABLE TO CONNECT FAKE PLAYER");
-            e.printStackTrace();
+            throw new RuntimeException("Unable to connect Fake Player",e);
         }
-
     }
 
-    public void disconnect() {
-        communicator.disconnect(handle);
+    public void disconnect()  {
+        try {
+            communicator.disconnect(handle);
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException("Unable to disconnect Fake Player",e);
+        }
     }
 
 }

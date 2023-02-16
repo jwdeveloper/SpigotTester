@@ -32,37 +32,23 @@ import io.github.jwdeveloper.spigot.tester.api.data.TestPluginReport;
 import io.github.jwdeveloper.spigot.tester.api.data.TestsReport;
 import io.github.jwdeveloper.spigot.tester.implementation.gson.JsonUtility;
 import io.github.jwdeveloper.spigot.tester.implementation.players.NmsCommunicator;
-import io.github.jwdeveloper.spigot.tester.temp.EventListener;
 import io.github.jwdeveloper.spigot.tester.temp.ValidationExceptionDisplay;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.lang.reflect.InvocationTargetException;
 import java.time.OffsetDateTime;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 public class PluginMain extends JavaPlugin {
 
-
     @Override
     public void onEnable() {
-
-
-
-        getServer().getPluginManager().registerEvents(new EventListener(), this);
         waitForAllPluginToBeEnabled(plugins ->
         {
-            for(Player p : Bukkit.getOnlinePlayers())
-            {
-                Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN+"player performing command "+p.getName());
-                p.chat("/teleport "+p.getName()+" 1 100 1");
-                p.chat("siema");
-            }
             getLogger().info("Server version: "+PluginMain.getVersion());
             var optional = createNmsCommunicator();
             if (optional.isEmpty()) {
@@ -109,14 +95,6 @@ public class PluginMain extends JavaPlugin {
         return Optional.empty();
     }
 
-    public static String getVersion()
-    {
-        var packageName = Bukkit.getServer().getClass().getPackageName();
-        var index = packageName.lastIndexOf('.');
-        var version = packageName.substring(index+1);
-        return version;
-    }
-
     public void waitForAllPluginToBeEnabled(Consumer<List<Plugin>> onEnable) {
         var plugins = Bukkit.getPluginManager().getPlugins();
         Bukkit.getScheduler().runTaskTimer(this, (task) ->
@@ -125,13 +103,11 @@ public class PluginMain extends JavaPlugin {
                 if (!plugin.isEnabled())
                     return;
             }
+            var pluginsToTest = Arrays
+                    .stream(plugins)
+                    .filter(e -> !e.equals(this))
+                    .collect(Collectors.toList());
 
-            List<Plugin> pluginsToTest = new ArrayList<>();
-            for (var plugin : plugins) {
-                if (plugin.equals(this))
-                    continue;
-                pluginsToTest.add(plugin);
-            }
             onEnable.accept(pluginsToTest);
             task.cancel();
         }, 10, 10);
@@ -142,9 +118,10 @@ public class PluginMain extends JavaPlugin {
         return SpigotTesterAPI.create(plugin, new TestOptions(), nmsCommunicator)
                 .configure(testOptions ->
                 {
+                    //To avoid generating report file for each plugin
                     testOptions.setGenerateReport(false);
                 })
-                .injectParameter(plugin, Plugin.class)
+                .addParameter(plugin, Plugin.class)
                 .onException(Throwable::printStackTrace)
                 .run();
     }
@@ -174,4 +151,10 @@ public class PluginMain extends JavaPlugin {
         }
     }
 
+    public static String getVersion()
+    {
+        var packageName = Bukkit.getServer().getClass().getPackageName();
+        var index = packageName.lastIndexOf('.');
+        return packageName.substring(index+1);
+    }
 }

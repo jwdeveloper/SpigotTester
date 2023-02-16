@@ -24,10 +24,18 @@
 
 package io.github.jwdeveloper.spigot.tester.api;
 
+
 import io.github.jwdeveloper.spigot.tester.api.builder.ExecutableTestRunnerBuilder;
 import io.github.jwdeveloper.spigot.tester.api.builder.TestRunnerBuilder;
 
+
 public interface SpigotTesterSetup
 {
-    void onSpigotTesterSetup(TestRunnerBuilder builder);
+    /* When SpigotTesterSetup is implemented in Plugin class
+     * this method will be called
+     *
+     * It can be use to change tests configuration and add parameters by
+     *  builder.addParameter(new SomeImportantClass())
+     */
+    void onSpigotTesterSetup(TestRunnerBuilder<ExecutableTestRunnerBuilder> builder);
 }

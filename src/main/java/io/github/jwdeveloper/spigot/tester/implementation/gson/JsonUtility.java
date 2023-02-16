@@ -26,8 +26,8 @@ package io.github.jwdeveloper.spigot.tester.implementation.gson;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import io.github.jwdeveloper.spigot.tester.implementation.gson.adapters.ThrowAbleAdapter;
 import io.github.jwdeveloper.spigot.tester.implementation.gson.adapters.OffsetDateTimeAdapter;
+import io.github.jwdeveloper.spigot.tester.implementation.gson.adapters.ThrowAbleAdapter;
 
 import java.io.FileWriter;
 import java.io.IOException;

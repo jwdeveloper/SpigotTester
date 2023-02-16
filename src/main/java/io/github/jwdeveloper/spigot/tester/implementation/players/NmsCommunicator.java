@@ -129,16 +129,18 @@ public class NmsCommunicator {
                     .withParameter(C_ENTITY_PLAYER.getClassType());
         }).find();
 
-        M_DISCONNECT_PLAYER = fluentReflect.findMethod(PLAYER_LIST.getClass()).forAnyVersion(finder ->
-        {
-            finder.withName("remove");
-            finder.withPublic();
-            finder.withType(String.class);
-            finder.withParameter(C_ENTITY_PLAYER.getClassType());
-        }).forVersion("v1_17_R1", finder ->
-        {
-            finder.withName("disconnect");
-        }).find();
+        M_DISCONNECT_PLAYER = fluentReflect
+                .findMethod(PLAYER_LIST.getClass())
+                .forAnyVersion(finder ->
+                {
+                    finder.withName("remove");
+                    finder.withPublic();
+                    finder.withType(String.class);
+                    finder.withParameter(C_ENTITY_PLAYER.getClassType());
+                }).forVersion("v1_17_R1", finder ->
+                {
+                    finder.withName("disconnect");
+                }).find();
 
         //GameProfile
         CTR_GAMEPROFILE = fluentReflect.findClass().forAnyVersion(finder ->
@@ -156,7 +158,7 @@ public class NmsCommunicator {
         {
             finder.withName("net.minecraft.network.protocol.EnumProtocolDirection");
         }).find().getClassType();
-        for (Object obj : E_PROTOCOL_DIRECTION.getEnumConstants()) {
+        for (var obj : E_PROTOCOL_DIRECTION.getEnumConstants()) {
             PROTOCOL_ENUM_VALUE = obj;
         }
     }
@@ -167,24 +169,16 @@ public class NmsCommunicator {
         M_CONNECT_PLAYER.invoke(PLAYER_LIST, networkManager, entityPlayer);
     }
 
-    public void disconnect(Object entityPlayer) {
-        try {
-            M_DISCONNECT_PLAYER.invoke(PLAYER_LIST, entityPlayer);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void disconnect(Object entityPlayer) throws InvocationTargetException, IllegalAccessException {
+        M_DISCONNECT_PLAYER.invoke(PLAYER_LIST, entityPlayer);
     }
 
     public FakePlayer createFakePlayer(UUID uuid, String name) throws InvocationTargetException, IllegalAccessException, InstantiationException {
         Object gameProfile = CTR_GAMEPROFILE.newInstance(uuid, name);
         Object entityPlayer = CTR_ENTITY_PLAYER.newInstance(MINECRAFT_SERVER, SERVER_WORLD, gameProfile);
         Player player = CTR_CRAFT_PLAYER.newInstance(Bukkit.getServer(), entityPlayer);
-        var fakePlayer = new FakePlayer(player, entityPlayer, this);
-        return fakePlayer;
+        return new FakePlayer(player, entityPlayer, this);
     }
-
-
-
 
     /*
      var server = (CraftServer) Bukkit.getServer();

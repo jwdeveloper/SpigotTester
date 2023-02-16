@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c)  2023. jwdeveloper
+ * Copyright (c)  $originalComment.match("Copyright \(c\) (\d+)", 1, "-", "$today.year")2023. jwdeveloper
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,37 +22,56 @@
  * SOFTWARE.
  */
 
-package io.github.jwdeveloper.spigot.tester.implementation;
+package io.github.jwdeveloper.spigot.tester.api.assertions;
 
-import io.github.jwdeveloper.spigot.tester.api.data.TestClassResult;
-import io.github.jwdeveloper.spigot.tester.api.data.TestPluginReport;
-import lombok.Data;
+import org.bukkit.entity.Player;
+import org.checkerframework.checker.units.qual.C;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
+public class CommandAssertion {
+    private String command;
 
-@Data
-public class EventsHandler {
-    private List<Consumer<TestClassResult>> onTestEvent = new ArrayList<>();
-    private List<Consumer<TestPluginReport>> onTestFinished = new ArrayList<>();
+    public CommandAssertion(String command) {
+        this.command = command;
+    }
 
-    public void onTest(Consumer<TestClassResult> event)
+    public CommandAssertion wasTriggered(int howOften)
     {
-        onTestEvent.add(event);
+        return this;
     }
 
-    public void onFinish(Consumer<TestPluginReport> event)
+    public CommandAssertion getCommand(int index)
     {
-        onTestFinished.add(event);
+          return this;
     }
 
-    public void invokeOnTest(TestClassResult event) {
-        onTestEvent.stream().forEach(e -> e.accept(event));
+    public CommandAssertion byAnyone()
+    {
+        return this;
     }
 
-    public void invokeOnFinish(TestPluginReport report) {
-        onTestFinished.stream().forEach(e -> e.accept(report));
+    public CommandAssertion byPlayer(Player player)
+    {
+        return this;
+    }
+
+    public CommandAssertion byConsole()
+    {
+        return this;
+    }
+
+    public CommandAssertion withArguments(String ... args)
+    {
+        return this;
+    }
+
+    public CommandAssertion withSuccess()
+    {
+        return this;
+    }
+
+    public CommandAssertion withFailer()
+    {
+        return this;
     }
 
 }
