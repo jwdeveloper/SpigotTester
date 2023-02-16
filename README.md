@@ -26,7 +26,7 @@ public final class PluginMain extends JavaPlugin implements SpigotTesterSetup {
    //Here you can configure tests and inject parameters
     @Override
     public void onSpigotTesterSetup(TestRunnerBuilder builder) {
-        builder.injectParameter(craftingManager);
+        builder.addParameter(craftingManager);
     }
 }
 
