@@ -25,13 +25,11 @@
 package io.github.jwdeveloper.spigot.tester.implementation;
 
 import io.github.jwdeveloper.spigot.tester.api.TestContext;
-import io.github.jwdeveloper.spigot.tester.api.assertions.Assertions;
+import io.github.jwdeveloper.spigot.tester.api.assertions.AssertionFactory;
 import io.github.jwdeveloper.spigot.tester.api.players.PlayerFactory;
 import io.github.jwdeveloper.spigot.tester.implementation.players.FakePlayerFactoryImpl;
-import org.bukkit.event.Event;
 import org.bukkit.plugin.Plugin;
 
-import java.util.List;
 import java.util.function.Function;
 
 public class SpigotTestContext implements TestContext {
@@ -56,19 +54,15 @@ public class SpigotTestContext implements TestContext {
     }
 
     @Override
-    public List<Event> getInvokedEvents() {
-        return spigotEventCollector.getEvents();
-    }
-
-    @Override
-    public PlayerFactory getPlayerContext() {
+    public PlayerFactory getPlayerFactory() {
         return playerFactory;
     }
 
     @Override
-    public Assertions assertions(Object target) {
-        return new Assertions(target);
+    public AssertionFactory getAssertionFactory() {
+        return new AssertionFactory(spigotEventCollector);
     }
+
 
     @Override
     public Plugin plugin() {
@@ -81,7 +75,7 @@ public class SpigotTestContext implements TestContext {
     }
 
     public void stop() {
-        playerFactory.clear();
+        playerFactory.removeFakePlayers();
         spigotEventCollector.stopCollectingEvents();
     }
 }

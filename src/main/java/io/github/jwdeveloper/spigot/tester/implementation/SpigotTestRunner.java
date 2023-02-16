@@ -35,6 +35,7 @@ import io.github.jwdeveloper.spigot.tester.api.models.TestClassModel;
 import io.github.jwdeveloper.spigot.tester.api.models.TestMethodModel;
 import io.github.jwdeveloper.spigot.tester.implementation.factory.TestClassModelFactory;
 import io.github.jwdeveloper.spigot.tester.implementation.handlers.EventsHandler;
+import io.github.jwdeveloper.spigot.tester.implementation.utils.JarScanner;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.bukkit.plugin.Plugin;
@@ -66,15 +67,14 @@ public class SpigotTestRunner implements TestRunner {
     }
 
     @Override
-    public TestPluginReport run() throws InvocationTargetException,InstantiationException, IllegalAccessException, ExecutionException, InterruptedException
-    {
+    public TestPluginReport run() throws InvocationTargetException, InstantiationException, IllegalAccessException, ExecutionException, InterruptedException, NoSuchMethodException {
         var classes = jarScanner.findBySuperClass(SpigotTest.class);
-        var testClasses = factory.createTestModels(classes);
         var classResults = new ArrayList<TestClassResult>();
-        for (var testClass : testClasses) {
-
+        for (var clazz : classes)
+        {
+            var testClassModel = factory.createTestModel(clazz, testContext);
             testContext.start();
-            var classResult = performClassTest(testClass);
+            var classResult = performClassTest(testClassModel);
             testContext.stop();
             eventsHandler.invokeOnTest(classResult);
             classResults.add(classResult);
@@ -174,7 +174,7 @@ public class SpigotTestRunner implements TestRunner {
     {
         try {
             testClassModel.getSpigotTest().before();
-            if(testContext.getPlayerContext().getAmount() != 0)
+            if(testContext.getPlayerFactory().getAmount() != 0)
             {
                 TestMethodResult res = new TestMethodResult();
                 res.setPassed(false);

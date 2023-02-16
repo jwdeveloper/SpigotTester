@@ -26,43 +26,29 @@ package io.github.jwdeveloper.spigot.tester.api.assertions;
 
 import org.bukkit.event.Event;
 
-import java.util.function.Function;
+import java.util.List;
 
-public class EventsAssertions {
+public class EventsAssertions<T extends Event> {
 
-    private Class<? extends Event> event;
+    private List<T> events;
 
-    public EventsAssertions(Class<? extends Event> event) {
-        this.event = event;
+    public EventsAssertions(List<T> events) {
+        this.events = events;
     }
 
     public EventsAssertions wasInvoked() {
-        return this;
-    }
-    public EventsAssertions wasInvoked(int howOften) {
-        return this;
-    }
-    public EventsAssertions getEvent(int index) {
+        new CommonAssertions(events.size()).shouldNotBe(0);
         return this;
     }
 
-    public EventsAssertions getFirstEvent() {
+    public EventsAssertions wasInvoked(Times times) {
+        new CommonAssertions(times.getValue()).shouldBe(events.size());
         return this;
     }
 
-    public EventsAssertions getLastEvent() {
-        return this;
-    }
-
-    public EventsAssertions validate(Function<Event,Boolean> validation)
+    public boolean validate()
     {
-        return this;
-    }
-
-
-    public EventsAssertions wasCanceled()
-    {
-        return this;
+        return false;
     }
 
 }

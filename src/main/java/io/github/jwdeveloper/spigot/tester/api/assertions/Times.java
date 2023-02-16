@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c)  2023. jwdeveloper
+ * Copyright (c)  $originalComment.match("Copyright \(c\) (\d+)", 1, "-", "$today.year")2023. jwdeveloper
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,19 +22,44 @@
  * SOFTWARE.
  */
 
-package io.github.jwdeveloper.spigot.tester.api;
+package io.github.jwdeveloper.spigot.tester.api.assertions;
 
-import io.github.jwdeveloper.spigot.tester.api.assertions.AssertionFactory;
-import io.github.jwdeveloper.spigot.tester.api.players.PlayerFactory;
-import org.bukkit.plugin.Plugin;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-public interface TestContext
+@AllArgsConstructor
+public class Times
 {
-     PlayerFactory getPlayerFactory();
+    @Getter
+    private int value;
 
-     AssertionFactory getAssertionFactory();
+    public static Times never()
+    {
+        return exact(0);
+    }
 
-     Plugin plugin();
+    public static Times once()
+    {
+        return exact(1);
+    }
 
-     <T> T getParameter(Class<T> clazz);
+    public static Times exact(int times)
+    {
+        return new Times(times);
+    }
+
+    public static Times moreThan(int times)
+    {
+        return null;
+    }
+
+    public static Times lessThen(int times)
+    {
+        return null;
+    }
+
+    public static Times between(int from, int to)
+    {
+        return null;
+    }
 }

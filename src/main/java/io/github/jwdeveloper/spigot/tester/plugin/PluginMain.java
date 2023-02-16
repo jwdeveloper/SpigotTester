@@ -49,20 +49,22 @@ public class PluginMain extends JavaPlugin {
     public void onEnable() {
         waitForAllPluginToBeEnabled(plugins ->
         {
-            getLogger().info("Server version: "+PluginMain.getVersion());
+            getLogger().info("Server version: " + PluginMain.getVersion());
             var optional = createNmsCommunicator();
             if (optional.isEmpty()) {
                 getLogger().warning("SpigotTester will not working for this minecraft version, try different");
                 return;
             }
             var nmsCommunicator = optional.get();
-            getLogger().info("Preparing to start tests");
-            var config = Config.load(this.getConfig());
+
+            getLogger().info("Loading config");
+            var config = Config.load(this);
             var reports = new ArrayList<TestPluginReport>();
 
             if (!config.isDisplayLogs())
                 getLogger().setLevel(Level.OFF);
 
+            getLogger().info("Preparing to start tests");
             for (var plugin : plugins) {
                 if (config.getIgnorePlugins().contains(plugin.getName())) {
                     continue;
@@ -70,7 +72,10 @@ public class PluginMain extends JavaPlugin {
                 var report = runTests(plugin, nmsCommunicator);
                 reports.add(report);
             }
+
+            getLogger().info("Saving report");
             var reportJson = saveReport(reports);
+
             if (config.isOpenWebsite()) {
                 String body = Base64.getEncoder().encodeToString(reportJson.getBytes());
                 Browser.open(body);
@@ -105,7 +110,7 @@ public class PluginMain extends JavaPlugin {
             }
             var pluginsToTest = Arrays
                     .stream(plugins)
-                    .filter(e -> !e.equals(this))
+                    .filter(plugin -> !plugin.equals(this))
                     .collect(Collectors.toList());
 
             onEnable.accept(pluginsToTest);
@@ -121,7 +126,6 @@ public class PluginMain extends JavaPlugin {
                     //To avoid generating report file for each plugin
                     testOptions.setGenerateReport(false);
                 })
-                .addParameter(plugin, Plugin.class)
                 .onException(Throwable::printStackTrace)
                 .run();
     }
@@ -151,10 +155,9 @@ public class PluginMain extends JavaPlugin {
         }
     }
 
-    public static String getVersion()
-    {
+    public static String getVersion() {
         var packageName = Bukkit.getServer().getClass().getPackageName();
         var index = packageName.lastIndexOf('.');
-        return packageName.substring(index+1);
+        return packageName.substring(index + 1);
     }
 }

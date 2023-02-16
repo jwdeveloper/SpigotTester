@@ -24,48 +24,42 @@
 
 package io.github.jwdeveloper.spigot.tester.api.assertions;
 
+import io.github.jwdeveloper.spigot.tester.api.EventCollector;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 
-public class CommandAssertion {
-    private String command;
+import java.util.List;
+import java.util.stream.Collectors;
 
-    public CommandAssertion(String command) {
-        this.command = command;
+public class AssertionFactory {
+    private final EventCollector eventCollector;
+
+    public AssertionFactory(EventCollector collector) {
+        this.eventCollector = collector;
     }
 
-    public CommandAssertion wasInvoked(Times times)
-    {
-        return this;
+
+    public CommonAssertions assertThat(Object target) {
+        return new CommonAssertions(target);
     }
 
-    public CommandAssertion byAnyone()
-    {
-        return this;
+    public PlayerAssertions assertThatPlayer(Player player) {
+        return new PlayerAssertions(player);
     }
 
-    public CommandAssertion byPlayer(Player player)
-    {
-        return this;
+    public <T extends Event> EventsAssertions assertThatEvent(Class<T> eventClass) {
+        var events = eventCollector
+                .getEvents()
+                .stream()
+                .filter(event ->
+                {
+                    return event.getClass().isAssignableFrom(eventClass);
+                })
+                .collect(Collectors.toList());
+        return new EventsAssertions<T>((List<T>) events);
     }
 
-    public CommandAssertion byConsole()
-    {
-        return this;
+    public CommandAssertion assertThatCommand(String command) {
+        return new CommandAssertion(command);
     }
-
-    public CommandAssertion withArguments(String ... args)
-    {
-        return this;
-    }
-
-    public CommandAssertion withSuccess()
-    {
-        return this;
-    }
-
-    public boolean validate()
-    {
-        return false;
-    }
-
 }

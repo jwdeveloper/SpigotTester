@@ -26,7 +26,7 @@ package io.github.jwdeveloper.spigot.tester.plugin;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.Plugin;
 
 import java.util.List;
 
@@ -38,7 +38,10 @@ public class Config {
     private final boolean openWebsite;
     private final List<String> ignorePlugins;
 
-    public static Config load(FileConfiguration configuration) {
+    public static Config load(Plugin plugin) {
+        plugin.saveDefaultConfig();
+        var configuration = plugin.getConfig();
+
         var closeServerAfterTests = configuration.getBoolean("close-server-after-tests");
         var displayLogs = configuration.getBoolean("display-logs");
         var generateWebsite= configuration.getBoolean("open-report-in-website");

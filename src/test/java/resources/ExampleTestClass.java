@@ -47,14 +47,9 @@ package resources;/*
  */
 
 
-import io.github.jwdeveloper.spigot.tester.api.TestContext;
 import io.github.jwdeveloper.spigot.tester.api.annotations.Test;
 
 public class ExampleTestClass extends ExampleTestClassBase {
-    public ExampleTestClass(TestContext testContext) {
-        super(testContext);
-    }
-
 
     @Test
     void someTest() {

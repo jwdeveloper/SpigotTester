@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c)  2023. jwdeveloper
+ * Copyright (c)  $originalComment.match("Copyright \(c\) (\d+)", 1, "-", "$today.year")2023. jwdeveloper
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package io.github.jwdeveloper.spigot.tester.implementation;
+package io.github.jwdeveloper.spigot.tester.implementation.utils;
 
 
 import lombok.Getter;

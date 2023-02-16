@@ -47,14 +47,10 @@ package resources;/*
  */
 
 import io.github.jwdeveloper.spigot.tester.api.SpigotTest;
-import io.github.jwdeveloper.spigot.tester.api.TestContext;
 import io.github.jwdeveloper.spigot.tester.api.annotations.Test;
 
 public abstract class ExampleTestClassBase extends SpigotTest
 {
-    public ExampleTestClassBase(TestContext testContext) {
-        super(testContext);
-    }
 
     @Test
      void someBaseTest()

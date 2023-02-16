@@ -25,36 +25,26 @@
 package io.github.jwdeveloper.spigot.tester.implementation.factory;
 
 import io.github.jwdeveloper.spigot.tester.api.TestContext;
-import io.github.jwdeveloper.spigot.tester.api.assertions.Assertions;
+import io.github.jwdeveloper.spigot.tester.api.assertions.AssertionFactory;
 import io.github.jwdeveloper.spigot.tester.api.players.PlayerFactory;
-import org.bukkit.event.Event;
 import org.bukkit.plugin.Plugin;
 import org.junit.Assert;
 import org.junit.Test;
 import resources.ExampleTestClass;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Function;
 
 public class TestClassModelFactoryTest {
 
 
     @Test
-    public void shouldCreateTestClassModels() throws InvocationTargetException, InstantiationException, IllegalAccessException {
+    public void shouldCreateTestClassModels() throws InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException {
 
         Function<Class<?>, Object> provider = (c) -> new FakeContext();
         var model = new TestClassModelFactory(provider);
-        var classes = new ArrayList<Class<?>>();
-
-        classes.add(ExampleTestClass.class);
-
-        var result = model.createTestModels(classes);
-
-        Assert.assertEquals(result.size(),1);
-
-        var testModel = result.get(0);
+        var clazz = ExampleTestClass.class;
+        var testModel  = model.createTestModel(clazz, new FakeContext());
 
         Assert.assertEquals(testModel.getTestMethods().size(),2);
     }
@@ -63,12 +53,12 @@ public class TestClassModelFactoryTest {
     public class FakeContext implements TestContext {
 
         @Override
-        public PlayerFactory getPlayerContext() {
+        public PlayerFactory getPlayerFactory() {
             return null;
         }
 
         @Override
-        public Assertions assertions(Object target) {
+        public AssertionFactory getAssertionFactory() {
             return null;
         }
 
@@ -79,11 +69,6 @@ public class TestClassModelFactoryTest {
 
         @Override
         public <T> T getParameter(Class<T> clazz) {
-            return null;
-        }
-
-        @Override
-        public List<Event> getInvokedEvents() {
             return null;
         }
     }

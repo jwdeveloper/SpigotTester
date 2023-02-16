@@ -42,7 +42,7 @@ public class FakePlayerFactoryImpl implements PlayerFactory {
         this.nmsCommunicator = playerNms;
     }
 
-    public void clear() {
+    public void removeFakePlayers() {
         for (var player : players.values()) {
             player.disconnect();
         }

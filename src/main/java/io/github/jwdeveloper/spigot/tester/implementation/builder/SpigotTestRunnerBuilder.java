@@ -31,7 +31,6 @@ import io.github.jwdeveloper.spigot.tester.api.builder.TestRunnerBuilder;
 import io.github.jwdeveloper.spigot.tester.api.data.TestClassResult;
 import io.github.jwdeveloper.spigot.tester.api.data.TestOptions;
 import io.github.jwdeveloper.spigot.tester.api.data.TestPluginReport;
-import io.github.jwdeveloper.spigot.tester.implementation.JarScanner;
 import io.github.jwdeveloper.spigot.tester.implementation.SpigotEventCollector;
 import io.github.jwdeveloper.spigot.tester.implementation.SpigotTestContext;
 import io.github.jwdeveloper.spigot.tester.implementation.SpigotTestRunner;
@@ -42,6 +41,7 @@ import io.github.jwdeveloper.spigot.tester.implementation.handlers.EventsHandler
 import io.github.jwdeveloper.spigot.tester.implementation.handlers.ReportGeneratorHandler;
 import io.github.jwdeveloper.spigot.tester.implementation.players.FakePlayerFactoryImpl;
 import io.github.jwdeveloper.spigot.tester.implementation.players.NmsCommunicator;
+import io.github.jwdeveloper.spigot.tester.implementation.utils.JarScanner;
 import org.bukkit.plugin.Plugin;
 
 import java.io.InvalidClassException;
@@ -64,7 +64,7 @@ public class SpigotTestRunnerBuilder implements TestRunnerBuilder<SpigotTestRunn
         this.plugin = plugin;
         this.eventsHandler = new EventsHandler();
         this.parameters = new HashMap<>();
-        parameterProvider = this::defaultDependencyProvider;
+        this.parameterProvider = this::defaultDependencyProvider;
         this.nmsCommunicator = nmsCommunicator;
     }
 
@@ -110,7 +110,6 @@ public class SpigotTestRunnerBuilder implements TestRunnerBuilder<SpigotTestRunn
         return this;
     }
 
-
     public TestRunner build() {
         new DisplayTestHandler(eventsHandler, options);
         new ReportGeneratorHandler(
@@ -122,10 +121,11 @@ public class SpigotTestRunnerBuilder implements TestRunnerBuilder<SpigotTestRunn
         var spigotEventCollector = new SpigotEventCollector(plugin);
         var playerFactory = new FakePlayerFactoryImpl(nmsCommunicator);
         var testContext = new SpigotTestContext(plugin, playerFactory, parameterProvider, spigotEventCollector);
-        parameters.put(TestContext.class, testContext);
-
         var factory = new TestClassModelFactory(parameterProvider);
         var assemblyScanner = new JarScanner(plugin.getClass());
+
+        parameters.put(TestContext.class, testContext);
+        parameters.put(Plugin.class, plugin);
         return new SpigotTestRunner(
                 plugin,
                 factory,

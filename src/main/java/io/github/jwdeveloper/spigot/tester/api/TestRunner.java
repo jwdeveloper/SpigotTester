@@ -38,5 +38,6 @@ public interface TestRunner
             InstantiationException,
             IllegalAccessException,
             ExecutionException,
-            InterruptedException;
+            InterruptedException,
+            NoSuchMethodException;
 }

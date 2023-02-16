@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c)  2023. jwdeveloper
+ * Copyright (c)  $originalComment.match("Copyright \(c\) (\d+)", 1, "-", "$today.year")2023. jwdeveloper
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,17 +24,11 @@
 
 package io.github.jwdeveloper.spigot.tester.api;
 
-import io.github.jwdeveloper.spigot.tester.api.assertions.AssertionFactory;
-import io.github.jwdeveloper.spigot.tester.api.players.PlayerFactory;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.event.Event;
 
-public interface TestContext
+import java.util.List;
+
+public interface EventCollector
 {
-     PlayerFactory getPlayerFactory();
-
-     AssertionFactory getAssertionFactory();
-
-     Plugin plugin();
-
-     <T> T getParameter(Class<T> clazz);
+     List<Event> getEvents();
 }

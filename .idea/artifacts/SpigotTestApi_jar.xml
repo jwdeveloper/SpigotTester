@@ -1,9 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" build-on-make="true" name="SpigotTestApi:jar">
-    <output-path>$PROJECT_DIR$/../../MC/spigot_1.19.3/plugins</output-path>
-    <root id="archive" name="SpigotTestApi.jar">
-      <element id="module-output" name="SpigotTestApi" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/github/jwdeveloper/FluentReflect/0.0.5/FluentReflect-0.0.5.jar" path-in-jar="/" />
-    </root>
-  </artifact>
-</component>

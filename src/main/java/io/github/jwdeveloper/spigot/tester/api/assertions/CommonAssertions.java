@@ -25,22 +25,25 @@
 package io.github.jwdeveloper.spigot.tester.api.assertions;
 
 import io.github.jwdeveloper.spigot.tester.api.exception.AssertionException;
-import org.bukkit.entity.Player;
 
-import java.util.Collection;
-import java.util.List;
-
-public class Assertions {
+public class CommonAssertions {
 
     private final Object target;
 
-    public Assertions(Object target) {
+    public CommonAssertions(Object target) {
         this.target = target;
     }
 
-    public boolean shouldNotBeNull() {
+    public boolean shouldBeNull() {
         if (target == null) {
-            throw new AssertionException("null object");
+            throw new AssertionException("should be null");
+        }
+        return true;
+    }
+
+    public boolean shouldNotBeNull() {
+        if (target != null) {
+            throw new AssertionException("should not be null");
         }
         return true;
     }
@@ -69,7 +72,7 @@ public class Assertions {
 
     public boolean shouldBe(Object object) {
         if (!object.equals(target)) {
-            throw new AssertionException("should be equal");
+            throw new AssertionException("should be equal to "+target.toString()+" but was "+object);
         }
         return true;
     }
@@ -77,20 +80,9 @@ public class Assertions {
     public boolean shouldNotBe(Object object) {
 
         if (target.equals(object)) {
-            throw new RuntimeException("should not be equal");
+            throw new RuntimeException("should not be equal to "+target.toString()+" but was "+object);
         }
         return true;
     }
-
-    public <T> boolean shouldContains(T[] list) {
-
-        return true;
-    }
-
-    public <T> boolean shouldNotContains(Iterable<T> list) {
-
-        return true;
-    }
-
 
 }

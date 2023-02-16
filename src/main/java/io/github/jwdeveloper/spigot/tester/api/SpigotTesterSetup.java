@@ -34,7 +34,7 @@ public interface SpigotTesterSetup
     /* When SpigotTesterSetup is implemented in Plugin class
      * this method will be called
      *
-     * It can be use to change tests configuration and add parameters by
+     * It can be used to change tests configuration and add parameters by
      *  builder.addParameter(new SomeImportantClass())
      */
     void onSpigotTesterSetup(TestRunnerBuilder<ExecutableTestRunnerBuilder> builder);

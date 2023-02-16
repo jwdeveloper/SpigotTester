@@ -24,6 +24,7 @@
 
 package io.github.jwdeveloper.spigot.tester.implementation;
 
+import io.github.jwdeveloper.spigot.tester.api.EventCollector;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
@@ -34,7 +35,8 @@ import org.bukkit.plugin.RegisteredListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SpigotEventCollector implements Listener {
+public class SpigotEventCollector implements Listener, EventCollector
+{
     private final List<Event> events;
     private final RegisteredListener listener;
 

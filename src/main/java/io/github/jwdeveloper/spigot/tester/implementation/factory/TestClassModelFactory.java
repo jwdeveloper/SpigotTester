@@ -26,6 +26,7 @@ package io.github.jwdeveloper.spigot.tester.implementation.factory;
 
 
 import io.github.jwdeveloper.spigot.tester.api.SpigotTest;
+import io.github.jwdeveloper.spigot.tester.api.TestContext;
 import io.github.jwdeveloper.spigot.tester.api.annotations.Test;
 import io.github.jwdeveloper.spigot.tester.api.models.TestClassModel;
 import io.github.jwdeveloper.spigot.tester.api.models.TestMethodModel;
@@ -35,7 +36,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -48,24 +48,21 @@ public class TestClassModelFactory {
         this.parameterProvider = parameterProvider;
     }
 
-    public List<TestClassModel> createTestModels(Collection<Class<?>> testsClasses) throws InvocationTargetException, InstantiationException, IllegalAccessException {
-        var classModels = new ArrayList<TestClassModel>();
-        for (var clazz : testsClasses) {
-            var constructors = clazz.getConstructors();
-            if (constructors.length == 0) {
-                throw new IllegalArgumentException(clazz.getSimpleName() + " need to have one public constructor");
-            }
-            var instance = (SpigotTest) getSpigotTestInstance(constructors[0]);
-            var methodModels = getMethodModels(clazz);
+    public TestClassModel createTestModel(Class<?> testClass, TestContext testContext) throws InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException {
 
-            var classModel = new TestClassModel();
-            classModel.setName(clazz.getSimpleName());
-            classModel.setPackageName(clazz.getPackageName());
-            classModel.setSpigotTest(instance);
-            classModel.setTestMethods(methodModels);
-            classModels.add(classModel);
+        var constructors = testClass.getConstructors();
+        if (constructors.length == 0) {
+            throw new IllegalArgumentException(testClass.getSimpleName() + " need to have one public constructor");
         }
-        return classModels;
+        var instance = (SpigotTest) getSpigotTestInstance(constructors[0]);
+        setTestContext(instance, testContext);
+        var methodModels = getMethodModels(testClass);
+        var classModel = new TestClassModel();
+        classModel.setName(testClass.getSimpleName());
+        classModel.setPackageName(testClass.getPackageName());
+        classModel.setSpigotTest(instance);
+        classModel.setTestMethods(methodModels);
+        return classModel;
     }
 
 
@@ -110,6 +107,13 @@ public class TestClassModelFactory {
             currentClass = currentClass.getSuperclass();
         }
         return methods;
+    }
+
+    private void setTestContext(SpigotTest object, TestContext testContext) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+        var methods = SpigotTest.class.getDeclaredMethod("setTestContext", TestContext.class);
+        methods.setAccessible(true);
+        methods.invoke(object, testContext);
+        methods.setAccessible(false);
     }
 
 }

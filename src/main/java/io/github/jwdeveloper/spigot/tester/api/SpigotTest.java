@@ -24,10 +24,11 @@
 
 package io.github.jwdeveloper.spigot.tester.api;
 
-import io.github.jwdeveloper.spigot.tester.api.assertions.Assertions;
 import io.github.jwdeveloper.spigot.tester.api.assertions.CommandAssertion;
+import io.github.jwdeveloper.spigot.tester.api.assertions.CommonAssertions;
 import io.github.jwdeveloper.spigot.tester.api.assertions.EventsAssertions;
 import io.github.jwdeveloper.spigot.tester.api.assertions.PlayerAssertions;
+import io.github.jwdeveloper.spigot.tester.api.exception.AssertionException;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.Plugin;
@@ -35,12 +36,6 @@ import org.bukkit.plugin.Plugin;
 import java.util.UUID;
 
 public abstract class SpigotTest implements TestMember {
-
-    private final TestContext testContext;
-
-    public SpigotTest(TestContext testContext) {
-        this.testContext = testContext;
-    }
 
     @Override
     public void before() { /* Method when class is loaded, can be override   */ }
@@ -55,31 +50,46 @@ public abstract class SpigotTest implements TestMember {
     public void after() { /* Method called when all tests have been performed, can be override  */ }
 
 
-    /* Assertion utilities  */
-    protected final Assertions assertThat(Object object) {
-        return new Assertions(object);
+    private TestContext testContext;
+
+    /*
+     * Called by test engine when class is ready to perform tests
+     */
+    private void setTestContext(TestContext testContext) {
+        this.testContext = testContext;
+    }
+
+    private TestContext getTestContext() {
+        if (testContext == null) {
+            throw new AssertionException("Using SpigotTest methods in constructor is not allowed");
+        }
+        return testContext;
     }
 
     /* Assertion utilities  */
-    protected final PlayerAssertions assertThatPlayer(Player object) {
-        return new PlayerAssertions(object);
+    protected final CommonAssertions assertThat(Object target) {
+        return getTestContext().getAssertionFactory().assertThat(target);
     }
 
     /* Assertion utilities  */
-    protected final EventsAssertions assertThatEvent(Class<? extends Event> eventClass) {
-        return new EventsAssertions(eventClass);
+    protected final PlayerAssertions assertThatPlayer(Player player) {
+        return getTestContext().getAssertionFactory().assertThatPlayer(player);
     }
 
     /* Assertion utilities  */
-    protected final CommandAssertion assertThatCommand(String commandName)
-    {
-        return new CommandAssertion(commandName);
+    protected final <T extends Event> EventsAssertions<T> assertThatEvent(Class<T> eventClass) {
+        return getTestContext().getAssertionFactory().assertThatEvent(eventClass);
+    }
+
+    /* Assertion utilities  */
+    protected final CommandAssertion assertThatCommand(String commandName) {
+        return getTestContext().getAssertionFactory().assertThatCommand(commandName);
     }
 
     /* Creates fake player  */
     protected final Player addPlayer() {
         var uuid = UUID.randomUUID();
-        return testContext.getPlayerContext().createPlayer(uuid, uuid.toString());
+        return getTestContext().getPlayerFactory().createPlayer(uuid, uuid.toString());
     }
 
     /* Creates fake player  */
@@ -89,17 +99,17 @@ public abstract class SpigotTest implements TestMember {
 
     /* Creates fake player  */
     protected final Player addPlayer(UUID uuid, String name) {
-        return testContext.getPlayerContext().createPlayer(uuid, name);
+        return getTestContext().getPlayerFactory().createPlayer(uuid, name);
     }
 
     /* Get parameter that have been added in TestRunnerBuilder.addParameter() */
     protected final <T> T getParameter(Class<T> clazz) {
-        return testContext.getParameter(clazz);
+        return getTestContext().getParameter(clazz);
     }
 
     /* Current tested plugin instance */
     protected final Plugin getPlugin() {
-        return testContext.plugin();
+        return getTestContext().plugin();
     }
 
 }

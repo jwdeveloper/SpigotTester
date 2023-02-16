@@ -26,18 +26,13 @@ package io.github.jwdeveloper.spigot.exampleplugintotest;
 
 
 import io.github.jwdeveloper.spigot.tester.api.SpigotTest;
-import io.github.jwdeveloper.spigot.tester.api.TestContext;
 import io.github.jwdeveloper.spigot.tester.api.annotations.Test;
+import io.github.jwdeveloper.spigot.tester.api.assertions.Times;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.permissions.PermissionAttachment;
 
 public class ExampleTests extends SpigotTest {
-
-
-    public ExampleTests(TestContext testContext) {
-        super(testContext);
-    }
 
     @Test(name = "crafting permission test")
     public void shouldUseCrafting() {
@@ -46,37 +41,36 @@ public class ExampleTests extends SpigotTest {
         CraftingManager craftingManager = getParameter(CraftingManager.class);
         PermissionAttachment attachment = player.addAttachment(getPlugin());
         attachment.setPermission("crating", true);
-        player.setOp(true);
-        player.chat("/teleport " + player.getName() + " 91 63 -4");
-
         //Act
         boolean result = craftingManager.canPlayerUseCrating(player);
 
         //Assert
         assertThat(result).shouldBeTrue();
 
-        assertThatCommand("teleport")
-                .wasTriggered(2)
-                .getCommand(1)
-                .byPlayer(player)
-                .withArguments(player.getName(), "91", "63", "-4")
-                .withSuccess();
+        assertThatPlayer(player)
+                .hasName("mike")
+                .hasPermission("crating");
+    }
 
-        assertThatEvent(PlayerJoinEvent.class)
-                .wasInvoked(2)
-                .getFirstEvent()
-                .validate(event ->
-                {
-                   return false;
-                })
-                .getLastEvent()
-                .wasCanceled();
+
+    @Test(name = "teleportation test")
+    public void shouldBeTeleported() {
+        //Arrange
+        Player player = addPlayer("mike");
+
+        //Act
+        player.setOp(true);
+        player.performCommand("teleport "+player.getName()+" 1 100 2");
+        player.performCommand("teleport "+player.getName()+" 1 102 2");
+
+        //Assert
+        assertThatEvent(PlayerTeleportEvent.class)
+                .wasInvoked(Times.exact(1))
+                .validate();
 
         assertThatPlayer(player)
                 .hasName("mike")
-                .hasPermission("crating")
                 .hasOp();
     }
-
 
 }

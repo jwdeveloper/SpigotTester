@@ -24,62 +24,63 @@
 
 package io.github.jwdeveloper.spigot.tester.api.assertions;
 
-import io.github.jwdeveloper.spigot.tester.api.exception.AssertionException;
-import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
-public class PlayerAssertions
-{
+public class PlayerAssertions {
     private final Player player;
 
-    public PlayerAssertions(Player player)
-    {
+    public PlayerAssertions(Player player) {
         this.player = player;
     }
 
-    public PlayerAssertions hasName(String name)
-    {
+    public PlayerAssertions hasName(String name) {
         getAssertion(player.getName()).shouldBe(name);
         return this;
     }
 
-    public PlayerAssertions hasPassenger()
-    {
+    public PlayerAssertions hasNotName(String name) {
+        getAssertion(player.getName()).shouldNotBe(name);
         return this;
     }
 
-    public PlayerAssertions hasOp()
-    {
+    public PlayerAssertions hasOp() {
+        getAssertion(player.isOp()).shouldBeTrue();
         return this;
     }
 
-    public PlayerAssertions hasLocation(Location location)
-    {
+    public PlayerAssertions hasNotOp() {
+        getAssertion(player.isOp()).shouldBeFalse();
         return this;
     }
 
-    public PlayerAssertions hasPermission(String ... permissions)
-    {
+    public PlayerAssertions hasPassenger() {
+        getAssertion(player.getPassengers().size()).shouldNotBe(0);
         return this;
     }
 
-
-    public PlayerAssertions hasItemStack(ItemStack itemStack)
-    {
+    public PlayerAssertions hasNotPassenger() {
+        getAssertion(player.getPassengers().size()).shouldBe(0);
         return this;
     }
 
-    public PlayerAssertions hasPassenger(Entity ... entities)
-    {
+    public PlayerAssertions hasPermission(String... permissions) {
+        for(var perm : permissions)
+        {
+            getAssertion(player.hasPermission(perm)).shouldBeTrue();
+        }
         return this;
     }
 
+    public PlayerAssertions hasNotPermission(String... permissions) {
+        for(var perm : permissions)
+        {
+            getAssertion(player.hasPermission(perm)).shouldBeFalse();
+        }
+        return this;
+    }
 
-    private Assertions getAssertion(Object target)
-    {
-        return new Assertions(target);
+    private CommonAssertions getAssertion(Object target) {
+        return new CommonAssertions(target);
     }
 }
 

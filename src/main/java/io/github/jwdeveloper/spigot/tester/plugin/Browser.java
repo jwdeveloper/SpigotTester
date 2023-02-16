@@ -30,8 +30,7 @@ import java.io.IOException;
 public class Browser {
     public static void open(String url) {
         String os = System.getProperty("os.name").toLowerCase();
-        try
-        {
+        try {
             if (os.indexOf("win") >= 0) {
                 windows(url);
             }
@@ -41,10 +40,8 @@ public class Browser {
             if (os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0) {
                 linux(url);
             }
-        }
-        catch (Exception e)
-        {
-
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -55,18 +52,18 @@ public class Browser {
 
     private static void linux(String url) throws IOException {
         Runtime rt = Runtime.getRuntime();
-        String[] browsers = { "google-chrome", "firefox", "mozilla", "epiphany", "konqueror",
-                "netscape", "opera", "links", "lynx" };
+        String[] browsers = {"google-chrome", "firefox", "mozilla", "epiphany", "konqueror",
+                "netscape", "opera", "links", "lynx"};
 
         StringBuffer cmd = new StringBuffer();
         for (int i = 0; i < browsers.length; i++)
-            if(i == 0)
-                cmd.append(String.format(    "%s \"%s\"", browsers[i], url));
+            if (i == 0)
+                cmd.append(String.format("%s \"%s\"", browsers[i], url));
             else
                 cmd.append(String.format(" || %s \"%s\"", browsers[i], url));
         // If the first didn't work, try the next browser and so on
 
-        rt.exec(new String[] { "sh", "-c", cmd.toString() });
+        rt.exec(new String[]{"sh", "-c", cmd.toString()});
     }
 
     private static void mac(String url) throws IOException {

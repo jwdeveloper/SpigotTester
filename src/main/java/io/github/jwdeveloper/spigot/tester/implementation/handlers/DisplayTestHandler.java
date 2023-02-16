@@ -44,7 +44,7 @@ public class DisplayTestHandler {
         }
         var message = new MessageBuilder();
         if (test.getTestMethods().size() != 0) {
-            message.newLine();
+            Bukkit.getConsoleSender().sendMessage(" ");
         }
         ChatColor color = ChatColor.WHITE;
         if (test.isPassed()) {
@@ -113,15 +113,14 @@ public class DisplayTestHandler {
             return "";
         }
         var cause = exception.getCause() != null ? exception.getCause().getMessage() : exception.getMessage();
-        stackTrace.newLine()
-                .space(4)
+        Bukkit.getConsoleSender().sendMessage(" ");
+        stackTrace.space(2)
                 .append(ChatColor.AQUA)
-                .append("Reason").append(ChatColor.WHITE).space(1).append(cause).append(ChatColor.RESET).newLine()
-                .space(4)
+                .append("Reason").append(ChatColor.WHITE).space(1).append(cause).append(ChatColor.RESET).send();
+        return  new MessageBuilder().space(2)
                 .append(ChatColor.AQUA).append("Exception")
                 .append(ChatColor.WHITE).space(1).append(exception.getClass().getSimpleName())
-                .append(ChatColor.RESET);
-        return stackTrace.send();
+                .append(ChatColor.RESET).send();
     }
 
     private String showStackTrace(Throwable exception) {
