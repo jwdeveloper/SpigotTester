@@ -22,30 +22,41 @@
  * SOFTWARE.
  */
 
-package io.github.jwdeveloper.spigot.tester.api.assertions;
+package io.github.jwdeveloper.spigot.tester.spigot.players;
 
-import org.bukkit.event.Event;
+import lombok.Getter;
+import org.bukkit.entity.Player;
 
-import java.util.List;
+public class FakePlayer {
+    @Getter
+    private final Player player;
+    private final Object handle;
+    private final NmsCommunicator communicator;
 
-public class EventsAssertions<T extends Event> {
-
-    private List<T> events;
-
-    public EventsAssertions(List<T> events) {
-        this.events = events;
+    public FakePlayer(Player player, Object entityPlayerHandle, NmsCommunicator communicator) {
+           this.player = player;
+           this.handle = entityPlayerHandle;
+           this.communicator = communicator;
     }
 
-    public EventsAssertions wasInvoked() {
-        new CommonAssertions(events.size()).shouldNotBe(0);
-        return this;
+    public void connect() {
+        try {
+            communicator.connect(handle);
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException("Unable to connect Fake Player",e);
+        }
     }
 
-    public EventsAssertions wasInvoked(Times times) {
-
-        new CommonAssertions(times.getValue()).shouldBe(events.size());
-        return this;
+    public void disconnect()  {
+        try {
+            communicator.disconnect(handle);
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException("Unable to disconnect Fake Player",e);
+        }
     }
-
 
 }

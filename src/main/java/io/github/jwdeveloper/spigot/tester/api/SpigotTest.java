@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c)  2023. jwdeveloper
+ * Copyright (c)  2023  jwdeveloper
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,6 +29,7 @@ import io.github.jwdeveloper.spigot.tester.api.assertions.CommonAssertions;
 import io.github.jwdeveloper.spigot.tester.api.assertions.EventsAssertions;
 import io.github.jwdeveloper.spigot.tester.api.assertions.PlayerAssertions;
 import io.github.jwdeveloper.spigot.tester.api.exception.AssertionException;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.Plugin;
@@ -37,17 +38,25 @@ import java.util.UUID;
 
 public abstract class SpigotTest implements TestMember {
 
+    /* Method when class is loaded, can be overridden   */
     @Override
-    public void before() { /* Method when class is loaded, can be override   */ }
+    public void before() {
+    }
 
+    /* Method called before each test, can be overridden  */
     @Override
-    public void beforeEachTest() { /* Method called before each test, can be override  */ }
+    public void beforeEachTest() {
+    }
 
+    /* Method called after each test, can be overridden  */
     @Override
-    public void afterEachTest() { /* Method called after each test, can be override  */ }
+    public void afterEachTest() {
+    }
 
+    /* Method called when all tests have been performed, can be overridden  */
     @Override
-    public void after() { /* Method called when all tests have been performed, can be override  */ }
+    public void after() {
+    }
 
 
     private TestContext testContext;
@@ -90,6 +99,16 @@ public abstract class SpigotTest implements TestMember {
     protected final Player addPlayer() {
         var uuid = UUID.randomUUID();
         return getTestContext().getPlayerFactory().createPlayer(uuid, uuid.toString());
+    }
+
+    /* invokes command, that could be later assert  */
+    protected final void invokeCommand(CommandSender commandSender, String commandLine) {
+        getTestContext().getCommandCollector().invokeCommand(commandSender,commandLine);
+    }
+
+    /* invokes command, that could be later assert  */
+    protected final void invokeCommand(CommandSender commandSender, String commandName, String ... args) {
+        getTestContext().getCommandCollector().invokeCommand(commandSender,commandName, args);
     }
 
     /* Creates fake player  */

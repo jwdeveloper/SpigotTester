@@ -22,30 +22,40 @@
  * SOFTWARE.
  */
 
-package io.github.jwdeveloper.spigot.tester.api.assertions;
+package io.github.jwdeveloper.spigot.tester.spigot.handlers;
 
-import org.bukkit.event.Event;
+import io.github.jwdeveloper.spigot.tester.api.data.TestClassResult;
+import io.github.jwdeveloper.spigot.tester.api.data.TestPluginReport;
+import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
-public class EventsAssertions<T extends Event> {
+@Data
+public class EventsHandler
+{
 
-    private List<T> events;
+    private List<Consumer<TestClassResult>> onTestEvent = new ArrayList<>();
 
-    public EventsAssertions(List<T> events) {
-        this.events = events;
+    private List<Consumer<TestPluginReport>> onTestFinished = new ArrayList<>();
+
+    public void onTest(Consumer<TestClassResult> event)
+    {
+        onTestEvent.add(event);
     }
 
-    public EventsAssertions wasInvoked() {
-        new CommonAssertions(events.size()).shouldNotBe(0);
-        return this;
+    public void onFinish(Consumer<TestPluginReport> event)
+    {
+        onTestFinished.add(event);
     }
 
-    public EventsAssertions wasInvoked(Times times) {
-
-        new CommonAssertions(times.getValue()).shouldBe(events.size());
-        return this;
+    public void invokeOnTest(TestClassResult event) {
+        onTestEvent.stream().forEach(e -> e.accept(event));
     }
 
+    public void invokeOnFinish(TestPluginReport report) {
+        onTestFinished.stream().forEach(e -> e.accept(report));
+    }
 
 }

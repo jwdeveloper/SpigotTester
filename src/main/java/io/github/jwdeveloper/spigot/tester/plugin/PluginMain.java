@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c)  2023. jwdeveloper
+ * Copyright (c)  2023  jwdeveloper
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,8 +30,8 @@ import io.github.jwdeveloper.spigot.tester.SpigotTesterAPI;
 import io.github.jwdeveloper.spigot.tester.api.data.TestOptions;
 import io.github.jwdeveloper.spigot.tester.api.data.TestPluginReport;
 import io.github.jwdeveloper.spigot.tester.api.data.TestsReport;
-import io.github.jwdeveloper.spigot.tester.implementation.gson.JsonUtility;
-import io.github.jwdeveloper.spigot.tester.implementation.players.NmsCommunicator;
+import io.github.jwdeveloper.spigot.tester.spigot.gson.JsonUtility;
+import io.github.jwdeveloper.spigot.tester.spigot.players.NmsCommunicator;
 import io.github.jwdeveloper.spigot.tester.temp.ValidationExceptionDisplay;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
@@ -43,7 +43,7 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
-public class PluginMain extends JavaPlugin {
+public class PluginMain extends JavaPlugin  {
 
     @Override
     public void onEnable() {

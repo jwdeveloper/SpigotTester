@@ -22,30 +22,13 @@
  * SOFTWARE.
  */
 
-package io.github.jwdeveloper.spigot.tester.api.assertions;
+package io.github.jwdeveloper.spigot.tester.api.collectors;
 
 import org.bukkit.event.Event;
 
 import java.util.List;
 
-public class EventsAssertions<T extends Event> {
-
-    private List<T> events;
-
-    public EventsAssertions(List<T> events) {
-        this.events = events;
-    }
-
-    public EventsAssertions wasInvoked() {
-        new CommonAssertions(events.size()).shouldNotBe(0);
-        return this;
-    }
-
-    public EventsAssertions wasInvoked(Times times) {
-
-        new CommonAssertions(times.getValue()).shouldBe(events.size());
-        return this;
-    }
-
-
+public interface EventCollector
+{
+     List<Event> getEvents();
 }

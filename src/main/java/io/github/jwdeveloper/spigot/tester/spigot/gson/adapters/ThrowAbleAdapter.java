@@ -22,30 +22,21 @@
  * SOFTWARE.
  */
 
-package io.github.jwdeveloper.spigot.tester.api.assertions;
+package io.github.jwdeveloper.spigot.tester.spigot.gson.adapters;
 
-import org.bukkit.event.Event;
+import com.google.gson.*;
 
-import java.util.List;
+import java.lang.reflect.Type;
 
-public class EventsAssertions<T extends Event> {
-
-    private List<T> events;
-
-    public EventsAssertions(List<T> events) {
-        this.events = events;
+public class ThrowAbleAdapter implements JsonSerializer<Throwable>, JsonDeserializer<Throwable> {
+    @Override
+    public Throwable deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        return new Throwable("Exception could not be loaded from file");
     }
 
-    public EventsAssertions wasInvoked() {
-        new CommonAssertions(events.size()).shouldNotBe(0);
-        return this;
+    @Override
+    public JsonElement serialize(Throwable src, Type typeOfSrc, JsonSerializationContext context) {
+        final JsonObject obj = new JsonObject();
+        return obj;
     }
-
-    public EventsAssertions wasInvoked(Times times) {
-
-        new CommonAssertions(times.getValue()).shouldBe(events.size());
-        return this;
-    }
-
-
 }

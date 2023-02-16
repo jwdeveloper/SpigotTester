@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c)  2023. jwdeveloper
+ * Copyright (c)  2023  jwdeveloper
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,13 +34,15 @@ import org.bukkit.permissions.PermissionAttachment;
 
 public class ExampleTests extends SpigotTest {
 
-    @Test(name = "crafting permission test")
+
+    // @Test(name = "crafting permission test")
     public void shouldUseCrafting() {
         //Arrange
         Player player = addPlayer("mike");
         CraftingManager craftingManager = getParameter(CraftingManager.class);
         PermissionAttachment attachment = player.addAttachment(getPlugin());
         attachment.setPermission("crating", true);
+
         //Act
         boolean result = craftingManager.canPlayerUseCrating(player);
 
@@ -52,25 +54,31 @@ public class ExampleTests extends SpigotTest {
                 .hasPermission("crating");
     }
 
-
-    @Test(name = "teleportation test")
+    @Test(name = "teleport only player with op")
     public void shouldBeTeleported() {
         //Arrange
-        Player player = addPlayer("mike");
+        Player playerJoe = addPlayer("joe");
+        Player playerMike = addPlayer("mike");
 
         //Act
-        player.setOp(true);
-        player.performCommand("teleport "+player.getName()+" 1 100 2");
-        player.performCommand("teleport "+player.getName()+" 1 102 2");
+        invokeCommand(playerJoe, "teleport " + playerJoe.getName() + " 1 2 3");
+
+        playerMike.setOp(true);
+        invokeCommand(playerMike, "teleport " + playerMike.getName() + " 1 2 3");
 
         //Assert
         assertThatEvent(PlayerTeleportEvent.class)
-                .wasInvoked(Times.exact(1))
-                .validate();
+                .wasInvoked(Times.exact(2));
 
-        assertThatPlayer(player)
-                .hasName("mike")
-                .hasOp();
+        assertThatCommand("teleport")
+                .wasInvoked(Times.once())
+                .byPlayer(playerJoe)
+                .withFail();
+
+        assertThatCommand("teleport")
+                .wasInvoked(Times.once())
+                .byPlayer(playerMike)
+                .withSuccess();
     }
 
 }

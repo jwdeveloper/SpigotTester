@@ -22,30 +22,21 @@
  * SOFTWARE.
  */
 
-package io.github.jwdeveloper.spigot.tester.api.assertions;
+package io.github.jwdeveloper.spigot.tester.api.collectors;
 
-import org.bukkit.event.Event;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 
-import java.util.List;
-
-public class EventsAssertions<T extends Event> {
-
-    private List<T> events;
-
-    public EventsAssertions(List<T> events) {
-        this.events = events;
-    }
-
-    public EventsAssertions wasInvoked() {
-        new CommonAssertions(events.size()).shouldNotBe(0);
-        return this;
-    }
-
-    public EventsAssertions wasInvoked(Times times) {
-
-        new CommonAssertions(times.getValue()).shouldBe(events.size());
-        return this;
-    }
+@Getter
+@AllArgsConstructor
+public class CommandInvokeResult {
+    private boolean invokeResult;
+    private CommandSender commandSender;
+    private Command command;
+    private String commandName;
+    private String[] commandArgs;
 
 
 }

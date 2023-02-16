@@ -22,22 +22,47 @@
  * SOFTWARE.
  */
 
-package io.github.jwdeveloper.spigot.tester.api;
+package io.github.jwdeveloper.spigot.tester.spigot.players;
 
-import io.github.jwdeveloper.spigot.tester.api.assertions.AssertionFactory;
+
 import io.github.jwdeveloper.spigot.tester.api.players.PlayerFactory;
-import io.github.jwdeveloper.spigot.tester.spigot.commands.SpigotCommandCollector;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.entity.Player;
 
-public interface TestContext
-{
-     PlayerFactory getPlayerFactory();
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
-     AssertionFactory getAssertionFactory();
+public class FakePlayerFactoryImpl implements PlayerFactory {
 
-     Plugin plugin();
+    private final Map<UUID, FakePlayer> players;
+    private final NmsCommunicator nmsCommunicator;
 
-     <T> T getParameter(Class<T> clazz);
+    public FakePlayerFactoryImpl(NmsCommunicator playerNms) {
+        players = new HashMap<>();
+        this.nmsCommunicator = playerNms;
+    }
 
-     SpigotCommandCollector getCommandCollector();
+    public void removeFakePlayers() {
+        for (var player : players.values()) {
+            player.disconnect();
+        }
+    }
+
+
+    public Player createPlayer(UUID uuid, String name) {
+        try {
+            var fakePlayer = nmsCommunicator.createFakePlayer(uuid, name);
+            players.put(uuid, fakePlayer);
+            fakePlayer.connect();
+            return fakePlayer.getPlayer();
+        } catch (Exception e)
+        {
+            throw new RuntimeException("Unable to create Fake Player, this version of spigot may not be supported", e);
+        }
+    }
+
+    @Override
+    public int getAmount() {
+        return players.values().size();
+    }
 }

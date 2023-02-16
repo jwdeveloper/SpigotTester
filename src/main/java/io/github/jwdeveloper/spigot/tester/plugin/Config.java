@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c)  2023. jwdeveloper
+ * Copyright (c)  2023  jwdeveloper
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,7 +32,7 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class Config {
+public class Config  {
     private final boolean closeServerAfterTests;
     private final boolean displayLogs;
     private final boolean openWebsite;

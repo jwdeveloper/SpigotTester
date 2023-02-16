@@ -22,22 +22,61 @@
  * SOFTWARE.
  */
 
-package io.github.jwdeveloper.spigot.tester.api;
+package io.github.jwdeveloper.spigot.tester.spigot.factory;
 
+import io.github.jwdeveloper.spigot.tester.api.TestContext;
 import io.github.jwdeveloper.spigot.tester.api.assertions.AssertionFactory;
 import io.github.jwdeveloper.spigot.tester.api.players.PlayerFactory;
 import io.github.jwdeveloper.spigot.tester.spigot.commands.SpigotCommandCollector;
 import org.bukkit.plugin.Plugin;
+import org.junit.Assert;
+import org.junit.Test;
+import resources.ExampleTestClass;
 
-public interface TestContext
-{
-     PlayerFactory getPlayerFactory();
+import java.lang.reflect.InvocationTargetException;
+import java.util.function.Function;
 
-     AssertionFactory getAssertionFactory();
+public class TestClassModelFactoryTest {
 
-     Plugin plugin();
 
-     <T> T getParameter(Class<T> clazz);
+    @Test
+    public void shouldCreateTestClassModels() throws InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException {
 
-     SpigotCommandCollector getCommandCollector();
+        Function<Class<?>, Object> provider = (c) -> new FakeContext();
+        var model = new TestClassModelFactory(provider);
+        var clazz = ExampleTestClass.class;
+        var testModel  = model.createTestModel(clazz, new FakeContext());
+
+        Assert.assertEquals(testModel.getTestMethods().size(),2);
+    }
+
+
+    public class FakeContext implements TestContext {
+
+        @Override
+        public PlayerFactory getPlayerFactory() {
+            return null;
+        }
+
+        @Override
+        public AssertionFactory getAssertionFactory() {
+            return null;
+        }
+
+        @Override
+        public Plugin plugin() {
+            return null;
+        }
+
+        @Override
+        public <T> T getParameter(Class<T> clazz) {
+            return null;
+        }
+
+        @Override
+        public SpigotCommandCollector getCommandCollector() {
+            return null;
+        }
+    }
+
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c)  2023. jwdeveloper
+ * Copyright (c)  2023  jwdeveloper
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,8 +26,8 @@ package io.github.jwdeveloper.spigot.tester;
 
 import io.github.jwdeveloper.spigot.tester.api.builder.ExecutableTestRunnerBuilder;
 import io.github.jwdeveloper.spigot.tester.api.data.TestOptions;
-import io.github.jwdeveloper.spigot.tester.implementation.builder.SpigotExecutableTestRunnerBuilder;
-import io.github.jwdeveloper.spigot.tester.implementation.players.NmsCommunicator;
+import io.github.jwdeveloper.spigot.tester.spigot.builder.SpigotExecutableTestRunnerBuilder;
+import io.github.jwdeveloper.spigot.tester.spigot.players.NmsCommunicator;
 import org.bukkit.plugin.Plugin;
 
 public class SpigotTesterAPI {
