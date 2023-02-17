@@ -22,20 +22,21 @@
  * SOFTWARE.
  */
 
-package io.github.jwdeveloper.spigot.tester.api.players;
+package io.github.jwdeveloper.spigot.tester.core.gson.adapters;
 
-import org.bukkit.entity.Player;
+import com.google.gson.*;
 
-import java.util.UUID;
+import java.lang.reflect.Type;
 
-/**
- * After running all tests from certain class all
- * fake players will be disconnected from the server
- * Fake players are not visible to user but indeed there are active for the server
- */
-public interface PlayerFactory
-{
-    Player createPlayer(UUID uuid, String name);
+public class ThrowAbleAdapter implements JsonSerializer<Throwable>, JsonDeserializer<Throwable> {
+    @Override
+    public Throwable deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        return new Throwable("Exception could not be loaded from file");
+    }
 
-    int getPlayersCount();
+    @Override
+    public JsonElement serialize(Throwable src, Type typeOfSrc, JsonSerializationContext context) {
+        final JsonObject obj = new JsonObject();
+        return obj;
+    }
 }

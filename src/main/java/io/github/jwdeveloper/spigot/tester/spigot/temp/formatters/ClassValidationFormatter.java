@@ -22,20 +22,25 @@
  * SOFTWARE.
  */
 
-package io.github.jwdeveloper.spigot.tester.api.players;
+package io.github.jwdeveloper.spigot.tester.spigot.temp.formatters;
 
-import org.bukkit.entity.Player;
+import io.github.jwdeveloper.reflect.api.exceptions.ClassValidationException;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 
-import java.util.UUID;
-
-/**
- * After running all tests from certain class all
- * fake players will be disconnected from the server
- * Fake players are not visible to user but indeed there are active for the server
- */
-public interface PlayerFactory
+public class ClassValidationFormatter
 {
-    Player createPlayer(UUID uuid, String name);
+    private ClassValidationException exception;
 
-    int getPlayersCount();
+    public ClassValidationFormatter(ClassValidationException exception) {
+        this.exception = exception;
+    }
+
+
+
+    public void show() {
+        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + exception.getMessage());
+        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Looking for class: " + exception.getModel().getName());
+        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Version "+exception.getVersion());
+    }
 }

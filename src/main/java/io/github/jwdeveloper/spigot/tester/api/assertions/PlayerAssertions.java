@@ -26,62 +26,23 @@ package io.github.jwdeveloper.spigot.tester.api.assertions;
 
 import org.bukkit.entity.Player;
 
-public class PlayerAssertions {
-    private final Player player;
+public interface PlayerAssertions {
 
-    public PlayerAssertions(Player player) {
-        this.player = player;
-    }
+     PlayerAssertions hasName(String name);
 
-    public PlayerAssertions hasName(String name) {
-        getAssertion(player.getName()).shouldBe(name);
-        return this;
-    }
+     PlayerAssertions hasNotName(String name);
 
-    public PlayerAssertions hasNotName(String name) {
-        getAssertion(player.getName()).shouldNotBe(name);
-        return this;
-    }
+     PlayerAssertions hasOp();
 
-    public PlayerAssertions hasOp() {
-        getAssertion(player.isOp()).shouldBeTrue();
-        return this;
-    }
+     PlayerAssertions hasNotOp();
 
-    public PlayerAssertions hasNotOp() {
-        getAssertion(player.isOp()).shouldBeFalse();
-        return this;
-    }
+     PlayerAssertions hasPassenger();
 
-    public PlayerAssertions hasPassenger() {
-        getAssertion(player.getPassengers().size()).shouldNotBe(0);
-        return this;
-    }
+     PlayerAssertions hasNotPassenger();
 
-    public PlayerAssertions hasNotPassenger() {
-        getAssertion(player.getPassengers().size()).shouldBe(0);
-        return this;
-    }
+     PlayerAssertions hasPermission(String... permissions);
 
-    public PlayerAssertions hasPermission(String... permissions) {
-        for(var perm : permissions)
-        {
-            getAssertion(player.hasPermission(perm)).shouldBeTrue();
-        }
-        return this;
-    }
-
-    public PlayerAssertions hasNotPermission(String... permissions) {
-        for(var perm : permissions)
-        {
-            getAssertion(player.hasPermission(perm)).shouldBeFalse();
-        }
-        return this;
-    }
-
-    private CommonAssertions getAssertion(Object target) {
-        return new CommonAssertions(target);
-    }
+     PlayerAssertions hasNotPermission(String... permissions);
 }
 
 

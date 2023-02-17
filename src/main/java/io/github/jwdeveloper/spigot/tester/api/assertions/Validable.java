@@ -22,20 +22,9 @@
  * SOFTWARE.
  */
 
-package io.github.jwdeveloper.spigot.tester.api.players;
+package io.github.jwdeveloper.spigot.tester.api.assertions;
 
-import org.bukkit.entity.Player;
-
-import java.util.UUID;
-
-/**
- * After running all tests from certain class all
- * fake players will be disconnected from the server
- * Fake players are not visible to user but indeed there are active for the server
- */
-public interface PlayerFactory
+public interface Validable
 {
-    Player createPlayer(UUID uuid, String name);
-
-    int getPlayersCount();
+    void validate();
 }

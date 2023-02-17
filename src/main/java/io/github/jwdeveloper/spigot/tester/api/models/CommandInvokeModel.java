@@ -22,20 +22,22 @@
  * SOFTWARE.
  */
 
-package io.github.jwdeveloper.spigot.tester.api.players;
+package io.github.jwdeveloper.spigot.tester.api.models;
 
-import org.bukkit.entity.Player;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 
-import java.util.UUID;
+import java.util.Arrays;
 
-/**
- * After running all tests from certain class all
- * fake players will be disconnected from the server
- * Fake players are not visible to user but indeed there are active for the server
- */
-public interface PlayerFactory
-{
-    Player createPlayer(UUID uuid, String name);
-
-    int getPlayersCount();
+@Getter
+@AllArgsConstructor
+public class CommandInvokeModel {
+    private boolean invokeResult;
+    private CommandSender commandSender;
+    private Command command;
+    private String commandName;
+    private String[] commandArgs;
+    private String commandLine;
 }

@@ -22,20 +22,19 @@
  * SOFTWARE.
  */
 
-package io.github.jwdeveloper.spigot.tester.api.players;
+package io.github.jwdeveloper.spigot.tester.api;
 
-import org.bukkit.entity.Player;
 
-import java.util.UUID;
+import io.github.jwdeveloper.spigot.tester.api.builder.TestsBuilder;
 
-/**
- * After running all tests from certain class all
- * fake players will be disconnected from the server
- * Fake players are not visible to user but indeed there are active for the server
- */
-public interface PlayerFactory
+
+public interface PluginTestsSetup
 {
-    Player createPlayer(UUID uuid, String name);
-
-    int getPlayersCount();
+    /* When SpigotTesterSetup is implemented in Plugin class
+     * this method will be called
+     *
+     * It can be used to change tests configuration and add parameters by
+     *  builder.addParameter(new SomeImportantClass())
+     */
+    void onTestsSetup(TestsBuilder builder);
 }

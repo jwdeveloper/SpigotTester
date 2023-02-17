@@ -22,20 +22,26 @@
  * SOFTWARE.
  */
 
-package io.github.jwdeveloper.spigot.tester.api.players;
+package io.github.jwdeveloper.spigot.tester.api.assertions;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.UUID;
+public interface CommandAssertions extends Validable {
 
-/**
- * After running all tests from certain class all
- * fake players will be disconnected from the server
- * Fake players are not visible to user but indeed there are active for the server
- */
-public interface PlayerFactory
-{
-    Player createPlayer(UUID uuid, String name);
+    CommandAssertions wasInvoked(Times times);
 
-    int getPlayersCount();
+    CommandAssertions byPlayer();
+
+    CommandAssertions byPlayer(Player player);
+
+    CommandAssertions byCommandSender(CommandSender commandSender);
+
+    CommandAssertions byConsole();
+
+    CommandAssertions withArguments(String... args);
+
+    CommandAssertions withSuccess();
+
+    CommandAssertions withFail();
 }

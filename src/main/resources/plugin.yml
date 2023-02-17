@@ -1,4 +1,4 @@
 name: SpigotTester
 version: '${project.version}'
-main: io.github.jwdeveloper.spigot.tester.plugin.PluginMain
+main: io.github.jwdeveloper.spigot.tester.spigot.PluginMain
 api-version: 1.16

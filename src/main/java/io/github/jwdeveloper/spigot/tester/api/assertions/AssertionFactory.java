@@ -24,44 +24,16 @@
 
 package io.github.jwdeveloper.spigot.tester.api.assertions;
 
-import io.github.jwdeveloper.spigot.tester.api.collectors.CommandsCollector;
-import io.github.jwdeveloper.spigot.tester.api.collectors.EventCollector;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 
-import java.util.List;
-import java.util.stream.Collectors;
+public interface AssertionFactory {
 
-public class AssertionFactory {
-    private final EventCollector eventCollector;
-    private final CommandsCollector commandsCollector;
+    CommonAssertions assertThat(Object target);
 
-    public AssertionFactory(EventCollector collector,
-                            CommandsCollector commandsCollector) {
-        this.eventCollector = collector;
-        this.commandsCollector = commandsCollector;
-    }
+    PlayerAssertions assertThatPlayer(Player player);
 
+    <T extends Event> EventsAssertions<T> assertThatEvent(Class<T> eventClass);
 
-    public CommonAssertions assertThat(Object target) {
-        return new CommonAssertions(target);
-    }
-
-    public PlayerAssertions assertThatPlayer(Player player) {
-        return new PlayerAssertions(player);
-    }
-
-    public <T extends Event> EventsAssertions<T> assertThatEvent(Class<T> eventClass) {
-        var events = eventCollector
-                .getEvents()
-                .stream()
-                .filter(event -> event.getClass().isAssignableFrom(eventClass) ||
-                        event.getClass().equals(eventClass))
-                .collect(Collectors.toList());
-        return new EventsAssertions<T>((List<T>) events);
-    }
-
-    public CommandAssertion assertThatCommand(String command) {
-        return new CommandAssertion(commandsCollector.getCommands(), command);
-    }
+    CommandAssertions assertThatCommand(String command);
 }

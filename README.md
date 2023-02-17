@@ -35,7 +35,7 @@ public final class PluginMain extends JavaPlugin implements SpigotTesterSetup {
 Example Test
 ```java 
 import io.spigot.MyPlugin;
-import io.github.jwdeveloper.spigot.tester.api.SpigotTest;
+import io.github.jwdeveloper.spigot.tester.api.PluginTest;
 import io.github.jwdeveloper.spigot.tester.api.annotations.Test;
 import io.github.jwdeveloper.spigot.tester.api.assertions.SpigotAssertion;
 import org.bukkit.Bukkit;

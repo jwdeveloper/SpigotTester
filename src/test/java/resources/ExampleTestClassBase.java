@@ -46,10 +46,10 @@ package resources;/*
  * SOFTWARE.
  */
 
-import io.github.jwdeveloper.spigot.tester.api.SpigotTest;
+import io.github.jwdeveloper.spigot.tester.api.PluginTest;
 import io.github.jwdeveloper.spigot.tester.api.annotations.Test;
 
-public abstract class ExampleTestClassBase extends SpigotTest
+public abstract class ExampleTestClassBase extends PluginTest
 {
 
     @Test

@@ -22,20 +22,29 @@
  * SOFTWARE.
  */
 
-package io.github.jwdeveloper.spigot.tester.api.players;
+package io.github.jwdeveloper.spigot.tester.api.context;
 
-import org.bukkit.entity.Player;
+import io.github.jwdeveloper.spigot.tester.core.assertions.PluginAssertionFactory;
+import io.github.jwdeveloper.spigot.tester.api.players.PlayerFactory;
+import org.bukkit.command.CommandSender;
+import org.bukkit.event.Event;
+import org.bukkit.plugin.Plugin;
 
-import java.util.UUID;
-
-/**
- * After running all tests from certain class all
- * fake players will be disconnected from the server
- * Fake players are not visible to user but indeed there are active for the server
- */
-public interface PlayerFactory
+public interface TestContext
 {
-    Player createPlayer(UUID uuid, String name);
+     PlayerFactory getPlayerFactory();
 
-    int getPlayersCount();
+     PluginAssertionFactory getAssertionFactory();
+
+     Plugin plugin();
+
+     <T> T getParameter(Class<T> clazz);
+
+     void invokeCommand(CommandSender commandSender, String commandName, String ... args);
+
+     void invokeCommand(CommandSender commandSender, String commandName);
+
+     void invokeEvents(Event ... events);
+
+     void displayLogs(String title);
 }

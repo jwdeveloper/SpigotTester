@@ -22,20 +22,42 @@
  * SOFTWARE.
  */
 
-package io.github.jwdeveloper.spigot.tester.api.players;
+package io.github.jwdeveloper.spigot.tester.core.context.players;
 
+import io.github.jwdeveloper.spigot.tester.core.nms.NmsCommunicator;
+import lombok.Getter;
 import org.bukkit.entity.Player;
 
-import java.util.UUID;
+public class FakePlayer {
+    @Getter
+    private final Player player;
+    private final Object handle;
+    private final NmsCommunicator communicator;
 
-/**
- * After running all tests from certain class all
- * fake players will be disconnected from the server
- * Fake players are not visible to user but indeed there are active for the server
- */
-public interface PlayerFactory
-{
-    Player createPlayer(UUID uuid, String name);
+    public FakePlayer(Player player, Object entityPlayerHandle, NmsCommunicator communicator) {
+           this.player = player;
+           this.handle = entityPlayerHandle;
+           this.communicator = communicator;
+    }
 
-    int getPlayersCount();
+    public void connect() {
+        try {
+            communicator.connect(handle);
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException("Unable to connect Fake Player",e);
+        }
+    }
+
+    public void disconnect()  {
+        try {
+            communicator.disconnect(handle);
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException("Unable to disconnect Fake Player",e);
+        }
+    }
+
 }

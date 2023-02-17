@@ -22,20 +22,30 @@
  * SOFTWARE.
  */
 
-package io.github.jwdeveloper.spigot.tester.api.players;
+package io.github.jwdeveloper.spigot.tester.spigot;
 
-import org.bukkit.entity.Player;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import org.bukkit.plugin.Plugin;
 
-import java.util.UUID;
+import java.util.List;
 
-/**
- * After running all tests from certain class all
- * fake players will be disconnected from the server
- * Fake players are not visible to user but indeed there are active for the server
- */
-public interface PlayerFactory
-{
-    Player createPlayer(UUID uuid, String name);
+@Getter
+@AllArgsConstructor
+public class Config  {
+    private final boolean closeServerAfterTests;
+    private final boolean displayLogs;
+    private final boolean openWebsite;
+    private final List<String> ignorePlugins;
 
-    int getPlayersCount();
+    public static Config load(Plugin plugin) {
+        plugin.saveDefaultConfig();
+        var configuration = plugin.getConfig();
+
+        var closeServerAfterTests = configuration.getBoolean("close-server-after-tests");
+        var displayLogs = configuration.getBoolean("display-logs");
+        var generateWebsite= configuration.getBoolean("open-report-in-website");
+        var ignorePlugins = configuration.getStringList("display-logs");
+        return new Config(closeServerAfterTests, displayLogs,generateWebsite, ignorePlugins);
+    }
 }

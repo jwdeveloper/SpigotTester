@@ -22,16 +22,50 @@
  * SOFTWARE.
  */
 
-package io.github.jwdeveloper.spigot.tester.api.assertions;
+package io.github.jwdeveloper.spigot.tester.api.builder;
 
-import org.bukkit.event.Event;
 
-import java.util.List;
+import io.github.jwdeveloper.spigot.tester.core.data.TestClassResult;
+import io.github.jwdeveloper.spigot.tester.core.data.TestOptions;
+import io.github.jwdeveloper.spigot.tester.core.data.TestPluginReport;
+
+import java.util.function.Consumer;
 import java.util.function.Function;
 
-public interface EventsAssertions<T extends Event> extends Validable {
+public interface TestsBuilder {
 
-    EventsAssertions<T> wasInvoked(Times times);
+    TestsBuilder onException(Consumer<Exception> event);
 
-    void validate(Function<T, Boolean> onValidation);
+    /**
+     * Invoked when tests are done
+     */
+    TestsBuilder onFinish(Consumer<TestPluginReport> event);
+
+    /**
+     * Invoked when after each test
+     */
+    TestsBuilder onTest(Consumer<TestClassResult> event);
+
+    /**
+     * In case you need to use Dependency Injection container
+     */
+    TestsBuilder parameterProvider(Function<Class<?>, Object> provider);
+
+
+    /**
+     * Parameter that will be optionally passed to test class constructor
+     */
+    TestsBuilder addParameter(Object parameter);
+
+
+    /**
+     * Parameter that will be optionally passed to test class constructor
+     */
+    <T> TestsBuilder addParameter(T parameter, Class<T> type);
+
+
+    /**
+     * Tests configuration
+     */
+    TestsBuilder configure(Consumer<TestOptions> options);
 }

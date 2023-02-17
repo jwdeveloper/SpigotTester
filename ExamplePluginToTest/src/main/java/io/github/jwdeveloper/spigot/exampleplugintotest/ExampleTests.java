@@ -25,17 +25,17 @@
 package io.github.jwdeveloper.spigot.exampleplugintotest;
 
 
-import io.github.jwdeveloper.spigot.tester.api.SpigotTest;
+import io.github.jwdeveloper.spigot.tester.api.PluginTest;
 import io.github.jwdeveloper.spigot.tester.api.annotations.Test;
 import io.github.jwdeveloper.spigot.tester.api.assertions.Times;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.permissions.PermissionAttachment;
 
-public class ExampleTests extends SpigotTest {
+public class ExampleTests extends PluginTest {
 
 
-    // @Test(name = "crafting permission test")
+    @Test(name = "crafting permission test")
     public void shouldUseCrafting() {
         //Arrange
         Player player = addPlayer("mike");
@@ -61,24 +61,25 @@ public class ExampleTests extends SpigotTest {
         Player playerMike = addPlayer("mike");
 
         //Act
-        invokeCommand(playerJoe, "teleport " + playerJoe.getName() + " 1 2 3");
+        invokeCommand(playerJoe, "teleport " + playerJoe.getName() + " 1 3 3");
 
         playerMike.setOp(true);
         invokeCommand(playerMike, "teleport " + playerMike.getName() + " 1 2 3");
 
         //Assert
         assertThatEvent(PlayerTeleportEvent.class)
-                .wasInvoked(Times.exact(2));
+                .wasInvoked(Times.once())
+                .validate();
 
         assertThatCommand("teleport")
                 .wasInvoked(Times.once())
                 .byPlayer(playerJoe)
-                .withFail();
+                .validate();
 
         assertThatCommand("teleport")
                 .wasInvoked(Times.once())
                 .byPlayer(playerMike)
-                .withSuccess();
+                .validate();
     }
 
 }

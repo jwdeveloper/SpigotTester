@@ -22,20 +22,20 @@
  * SOFTWARE.
  */
 
-package io.github.jwdeveloper.spigot.tester.api.players;
+package io.github.jwdeveloper.spigot.tester.core.data;
 
-import org.bukkit.entity.Player;
+import lombok.Data;
 
-import java.util.UUID;
+@Data
+public class TestOptions {
+    private boolean runInParallel = true;
+    private boolean displayTestsInConsole = true;
+    private boolean displayTestExceptionsInConsole = true;
+    private boolean displayPassedTestsInConsole = true;
+    private boolean generateReport = true;
 
-/**
- * After running all tests from certain class all
- * fake players will be disconnected from the server
- * Fake players are not visible to user but indeed there are active for the server
- */
-public interface PlayerFactory
-{
-    Player createPlayer(UUID uuid, String name);
+    //by default report will be generated to server/plugins/<plugin>/report
+    private String reportPath;
 
-    int getPlayersCount();
+    private String reportName;
 }

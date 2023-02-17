@@ -22,20 +22,50 @@
  * SOFTWARE.
  */
 
-package io.github.jwdeveloper.spigot.tester.api.models;
+package io.github.jwdeveloper.spigot.tester.core.handlers;
 
-
-
-import io.github.jwdeveloper.spigot.tester.api.PluginTest;
+import io.github.jwdeveloper.spigot.tester.core.data.TestClassResult;
+import io.github.jwdeveloper.spigot.tester.core.data.TestPluginReport;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 @Data
-public class TestClassModel
+public class EventsHandler
 {
-    private String name;
-    private String packageName;
-    private PluginTest spigotTest;
-    private List<TestMethodModel> testMethods;
+
+    private List<Consumer<TestClassResult>> onTestEvent = new ArrayList<>();
+
+    private List<Consumer<TestPluginReport>> onTestFinished = new ArrayList<>();
+
+    private List<Consumer<Exception>> onException = new ArrayList<>();
+
+    public void onException(Consumer<Exception> event)
+    {
+        onException.add(event);
+    }
+
+    public void onTest(Consumer<TestClassResult> event)
+    {
+        onTestEvent.add(event);
+    }
+
+    public void onFinish(Consumer<TestPluginReport> event)
+    {
+        onTestFinished.add(event);
+    }
+
+    public void invokeOnTest(TestClassResult event) {
+        onTestEvent.forEach(e -> e.accept(event));
+    }
+    public void invokeOnFinish(TestPluginReport report) {
+        onTestFinished.forEach(e -> e.accept(report));
+    }
+
+    public void invokeOnException(Exception exception) {
+        onException.forEach(e -> e.accept(exception));
+    }
+
 }
