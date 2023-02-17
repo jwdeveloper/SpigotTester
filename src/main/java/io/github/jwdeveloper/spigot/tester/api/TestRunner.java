@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c)  2023. jwdeveloper
+ * Copyright (c)  2023  jwdeveloper
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,7 @@
 package io.github.jwdeveloper.spigot.tester.api;
 
 
-import io.github.jwdeveloper.spigot.tester.api.data.TestPluginReport;
+import io.github.jwdeveloper.spigot.tester.core.data.TestPluginReport;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.ExecutionException;
@@ -33,11 +33,5 @@ import java.util.concurrent.ExecutionException;
 
 public interface TestRunner
 {
-    TestPluginReport run() throws
-            InvocationTargetException,
-            InstantiationException,
-            IllegalAccessException,
-            ExecutionException,
-            InterruptedException,
-            NoSuchMethodException;
+    TestPluginReport run();
 }

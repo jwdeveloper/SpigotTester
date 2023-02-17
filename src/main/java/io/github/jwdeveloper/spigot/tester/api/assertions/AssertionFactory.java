@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c)  $originalComment.match("Copyright \(c\) (\d+)", 1, "-", "$today.year")2023. jwdeveloper
+ * Copyright (c)  2023  jwdeveloper
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,42 +24,16 @@
 
 package io.github.jwdeveloper.spigot.tester.api.assertions;
 
-import io.github.jwdeveloper.spigot.tester.api.EventCollector;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 
-import java.util.List;
-import java.util.stream.Collectors;
+public interface AssertionFactory {
 
-public class AssertionFactory {
-    private final EventCollector eventCollector;
+    CommonAssertions assertThat(Object target);
 
-    public AssertionFactory(EventCollector collector) {
-        this.eventCollector = collector;
-    }
+    PlayerAssertions assertThatPlayer(Player player);
 
+    <T extends Event> EventsAssertions<T> assertThatEvent(Class<T> eventClass);
 
-    public CommonAssertions assertThat(Object target) {
-        return new CommonAssertions(target);
-    }
-
-    public PlayerAssertions assertThatPlayer(Player player) {
-        return new PlayerAssertions(player);
-    }
-
-    public <T extends Event> EventsAssertions assertThatEvent(Class<T> eventClass) {
-        var events = eventCollector
-                .getEvents()
-                .stream()
-                .filter(event ->
-                {
-                    return event.getClass().isAssignableFrom(eventClass);
-                })
-                .collect(Collectors.toList());
-        return new EventsAssertions<T>((List<T>) events);
-    }
-
-    public CommandAssertion assertThatCommand(String command) {
-        return new CommandAssertion(command);
-    }
+    CommandAssertions assertThatCommand(String command);
 }

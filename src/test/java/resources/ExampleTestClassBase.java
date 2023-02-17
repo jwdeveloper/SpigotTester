@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c)  $originalComment.match("Copyright \(c\) (\d+)", 1, "-", "$today.year")2023. jwdeveloper
+ * Copyright (c)  2023  jwdeveloper
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -46,10 +46,10 @@ package resources;/*
  * SOFTWARE.
  */
 
-import io.github.jwdeveloper.spigot.tester.api.SpigotTest;
+import io.github.jwdeveloper.spigot.tester.api.PluginTest;
 import io.github.jwdeveloper.spigot.tester.api.annotations.Test;
 
-public abstract class ExampleTestClassBase extends SpigotTest
+public abstract class ExampleTestClassBase extends PluginTest
 {
 
     @Test

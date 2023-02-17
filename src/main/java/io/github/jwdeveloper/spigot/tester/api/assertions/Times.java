@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c)  $originalComment.match("Copyright \(c\) (\d+)", 1, "-", "$today.year")2023. jwdeveloper
+ * Copyright (c)  2023  jwdeveloper
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,38 +28,49 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor
-public class Times
-{
+public class Times {
     @Getter
     private int value;
 
-    public static Times never()
-    {
+    @Getter
+    private TimesType type;
+
+    public boolean validate(int input) {
+        switch (type) {
+            case Less:
+                return input < value;
+
+            case More:
+                return input > value;
+
+            case Exact:
+                return value == input;
+        }
+        return false;
+    }
+
+
+    public static Times never() {
         return exact(0);
     }
 
-    public static Times once()
-    {
+    public static Times once() {
         return exact(1);
     }
 
-    public static Times exact(int times)
-    {
-        return new Times(times);
+    public static Times exact(int times) {
+        return new Times(times, TimesType.Exact);
     }
 
-    public static Times moreThan(int times)
-    {
-        return null;
+    public static Times moreThan(int times) {
+        return new Times(times, TimesType.More);
     }
 
-    public static Times lessThen(int times)
-    {
-        return null;
+    public static Times lessThen(int times) {
+        return new Times(times, TimesType.Less);
     }
 
-    public static Times between(int from, int to)
-    {
-        return null;
+    public enum TimesType {
+        Exact, More, Less
     }
 }

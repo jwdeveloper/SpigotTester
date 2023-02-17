@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c)  2023. jwdeveloper
+ * Copyright (c)  2023  jwdeveloper
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,63 +26,17 @@ package io.github.jwdeveloper.spigot.tester.api.assertions;
 
 import io.github.jwdeveloper.spigot.tester.api.exception.AssertionException;
 
-public class CommonAssertions {
+public interface CommonAssertions {
 
-    private final Object target;
+    boolean shouldBeNull();
 
-    public CommonAssertions(Object target) {
-        this.target = target;
-    }
+    boolean shouldNotBeNull();
 
-    public boolean shouldBeNull() {
-        if (target == null) {
-            throw new AssertionException("should be null");
-        }
-        return true;
-    }
+    boolean shouldBeTrue();
 
-    public boolean shouldNotBeNull() {
-        if (target != null) {
-            throw new AssertionException("should not be null");
-        }
-        return true;
-    }
+    boolean shouldBeFalse();
 
-    public boolean shouldBeTrue() {
-        if(target instanceof Boolean)
-        {
-           var bool = (Boolean)target;
-            if (!bool) {
-                throw new AssertionException("should be true");
-            }
-        }
-        return true;
-    }
+    boolean shouldBe(Object object);
 
-    public boolean shouldBeFalse() {
-        if(target instanceof Boolean)
-        {
-            var bool = (Boolean)target;
-            if (bool) {
-                throw new AssertionException("should be false");
-            }
-        }
-        return true;
-    }
-
-    public boolean shouldBe(Object object) {
-        if (!object.equals(target)) {
-            throw new AssertionException("should be equal to "+target.toString()+" but was "+object);
-        }
-        return true;
-    }
-
-    public boolean shouldNotBe(Object object) {
-
-        if (target.equals(object)) {
-            throw new RuntimeException("should not be equal to "+target.toString()+" but was "+object);
-        }
-        return true;
-    }
-
+    boolean shouldNotBe(Object object);
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c)  2023. jwdeveloper
+ * Copyright (c)  2023  jwdeveloper
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -37,5 +37,5 @@ public interface PlayerFactory
 {
     Player createPlayer(UUID uuid, String name);
 
-    int getAmount();
+    int getPlayersCount();
 }

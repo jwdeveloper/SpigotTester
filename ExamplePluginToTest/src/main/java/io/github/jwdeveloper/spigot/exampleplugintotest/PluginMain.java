@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c)  2023. jwdeveloper
+ * Copyright (c)  2023  jwdeveloper
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,12 +24,12 @@
 
 package io.github.jwdeveloper.spigot.exampleplugintotest;
 
-import io.github.jwdeveloper.spigot.tester.api.SpigotTesterSetup;
-import io.github.jwdeveloper.spigot.tester.api.builder.ExecutableTestRunnerBuilder;
-import io.github.jwdeveloper.spigot.tester.api.builder.TestRunnerBuilder;
+import io.github.jwdeveloper.spigot.tester.api.PluginTestsSetup;
+import io.github.jwdeveloper.spigot.tester.api.builder.TestsBuilder;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class PluginMain extends JavaPlugin implements SpigotTesterSetup {
+public final class PluginMain extends JavaPlugin implements
+        PluginTestsSetup {
 
     private CraftingManager craftingManager;
 
@@ -37,12 +37,15 @@ public final class PluginMain extends JavaPlugin implements SpigotTesterSetup {
     public void onEnable() {
         // Plugin startup logic
         craftingManager = new CraftingManager();
+
+
     }
 
 
     @Override
-    public void onSpigotTesterSetup(TestRunnerBuilder<ExecutableTestRunnerBuilder> builder)
-    {
-         builder.addParameter(craftingManager);
+    public void onTestsSetup(TestsBuilder builder) {
+        builder.addParameter(craftingManager);
     }
+
+
 }

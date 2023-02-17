@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c)  $originalComment.match("Copyright \(c\) (\d+)", 1, "-", "$today.year")2023. jwdeveloper
+ * Copyright (c)  2023  jwdeveloper
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,28 +27,11 @@ package io.github.jwdeveloper.spigot.tester.api.assertions;
 import org.bukkit.event.Event;
 
 import java.util.List;
+import java.util.function.Function;
 
-public class EventsAssertions<T extends Event> {
+public interface EventsAssertions<T extends Event> extends Validable {
 
-    private List<T> events;
+    EventsAssertions<T> wasInvoked(Times times);
 
-    public EventsAssertions(List<T> events) {
-        this.events = events;
-    }
-
-    public EventsAssertions wasInvoked() {
-        new CommonAssertions(events.size()).shouldNotBe(0);
-        return this;
-    }
-
-    public EventsAssertions wasInvoked(Times times) {
-        new CommonAssertions(times.getValue()).shouldBe(events.size());
-        return this;
-    }
-
-    public boolean validate()
-    {
-        return false;
-    }
-
+    void validate(Function<T, Boolean> onValidation);
 }
