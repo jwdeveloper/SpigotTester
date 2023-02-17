@@ -95,6 +95,54 @@ public class ExampleTests extends PluginTest {
 }
 ```
 
+### Report output
+ `server/plugins/SpigotTester/report.json`
+```json
+{
+  "isPassed": true,
+  "reportId": "a7e47b6d-4165-4692-a286-b07404d37401",
+  "createdAt": "2023-02-17 15:11:35.4724659+01",
+  "serverVersion": "3638-Spigot-d90018e-7dcb59b (MC: 1.19.3)",
+  "spigotVersion": "1.19.3-R0.1-SNAPSHOT",
+  "spigotTesterVersion": "1.0.0-Release",
+  "plugins": [
+    {
+      "isPassed": true,
+      "pluginVersion": "1.0.0",
+      "pluginName": "ExamplePluginToTest",
+      "classResults": [
+        {
+          "className": "ExampleTests",
+          "classPackage": "io.github.jwdeveloper.spigot.exampleplugintotest",
+          "isIgnored": false,
+          "isPassed": true,
+          "testMethods": [
+            {
+              "name": "teleport only player with op",
+              "isPassed": true,
+              "executionTime": 26.0652,
+              "isIgnored": false,
+              "errorMessage": "",
+              "stackTrace": ""
+            },
+            {
+              "name": "crafting permission test",
+              "isPassed": true,
+              "executionTime": 18.7894,
+              "isIgnored": false,
+              "errorMessage": "",
+              "stackTrace": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+
+
+```
+
 To perform tests, put the SpigotTester plugin and your plugin in the `server/plugins` folder.
 Then, run the server. Once the server has finished starting up, SpigotTester will perform all tests and generate a report in the location `server/plugins/SpigotTester/report.json`.
 
