@@ -46,7 +46,7 @@ public class PluginCommandAssertionTest {
 
     @After
     public void tearDown() {
-        MockBukkit.unload();
+        MockBukkit.unmock();
     }
 
     @Test

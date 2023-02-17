@@ -101,7 +101,7 @@
         <dependency>
             <groupId>io.github.jwdeveloper.spigot.tester</groupId>
             <artifactId>spigot-tester</artifactId>
-            <version>1.0.0-Release</version>
+            <version>1.0.1-Release</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

@@ -51,7 +51,7 @@ public class PluginEventsAssertionsTest {
 
     @After
     public void tearDown() {
-        MockBukkit.unload();
+        MockBukkit.unmock();
     }
 
     @Test
